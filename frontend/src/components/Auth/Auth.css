@@ -1,19 +1,64 @@
+/* ============================================
+   GAMING GARAGE — Auth Page (Final Version)
+   ============================================ */
+
+/* Reset */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 .auth-container {
   display: flex;
   height: 100vh;
-  justify-content: flex-end;   /* ✅ Form aligned to right side */
+  width: 100vw;
+  justify-content: flex-end;   /* Form aligned right side */
   align-items: center;
+  position: relative;
 }
 
+/* Background image as DOM element */
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* ✅ scales with zoom */
+  z-index: -1;
+}
+
+/* Form card */
 .auth-form {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.82);
   padding: 2rem;
   border-radius: 10px;
   color: white;
   width: 350px;
-  margin-right: 5%;            /* ✅ Keeps it away from edge */
+  margin-right: 5%;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 170, 255, 0.25);
+  box-shadow: 0 0 32px rgba(0, 120, 255, 0.15);
 }
 
+/* Compact dropdown styling */
+.auth-form select {
+  padding: 7px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+}
+
+.auth-form select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+
+/* Tabs */
 .tabs {
   margin-bottom: 1rem;
   text-align: center;
@@ -26,12 +71,15 @@
   border: none;
   padding: 5px 10px;
   border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .tabs .active {
   background: #28a745;
 }
 
+/* Inputs */
 form input,
 form select {
   display: block;
@@ -40,8 +88,12 @@ form select {
   padding: 8px;
   border-radius: 5px;
   border: none;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.92);
+  color: #111;
 }
 
+/* Submit button */
 button[type="submit"] {
   width: 100%;
   background: #28a745;
@@ -49,14 +101,31 @@ button[type="submit"] {
   border: none;
   padding: 10px;
   border-radius: 5px;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: background 0.2s ease;
 }
 
+button[type="submit"]:hover {
+  background: #218838;
+}
+
+/* Forgot password button */
 .forgot {
   margin-top: 10px;
   text-align: right;
 }
 
-.forgot a {
+.forgot-link {
+  background: none;
+  border: none;
   color: #00aaff;
-  text-decoration: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
 }
+
+.forgot-link:hover {
+  text-decoration: underline;
+}
+
