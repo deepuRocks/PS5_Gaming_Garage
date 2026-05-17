@@ -1,12 +1,17 @@
-import React from 'react';
-import PaymentQR from './PaymentQR';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import LoginSignup from "./components/Auth/LoginSignup";
+import ForgotPassword from "./components/Auth/ForgotPassword";
+import ResetPassword from "./components/Auth/ResetPassword";
 
 function App() {
   return (
-    <div>
-      <h1>Welcome to PS5 Gaming Garage</h1>
-      <PaymentQR />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginSignup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+      </Routes>
+    </Router>
   );
 }
 
