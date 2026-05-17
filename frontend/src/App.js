@@ -1,13 +1,7 @@
-import React from 'react';
-import PaymentQR from './PaymentQR';
+import LoginSignup from "./components/Auth/LoginSignup";
 
 function App() {
-  return (
-    <div>
-      <h1>Welcome to PS5 Gaming Garage</h1>
-      <PaymentQR />
-    </div>
-  );
+  return <LoginSignup />;
 }
 
 export default App;
