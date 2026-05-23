@@ -1,5 +1,5 @@
 /* ============================================
-   GAMING GARAGE — Reset Password Page (Final Version)
+   GAMING GARAGE — Reset Password Page (Connected to Backend)
    ============================================ */
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,8 +11,14 @@ const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (newPassword !== rePassword) {
+      alert("Passwords do not match");
+      return;
+    }
 
     try {
       const response = await fetch(
@@ -21,22 +27,24 @@ const ResetPassword = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, newPassword }),
-        },
+        }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        alert(errorData.message || "Reset failed. Please check your email.");
+        alert(data.message || "Reset failed. Please check your email.");
         return;
       }
 
-      const data = await response.json();
       alert(data.message);
+      navigate("/"); // redirect back to login/signup
     } catch (err) {
       alert("Unable to connect to server. Please try again later.");
       console.error(err);
     }
   };
+
   return (
     <div
       className="auth-container"

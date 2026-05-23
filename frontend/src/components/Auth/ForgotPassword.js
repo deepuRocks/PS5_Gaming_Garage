@@ -1,5 +1,5 @@
 /* ============================================
-   GAMING GARAGE — Forgot Password Page (Final Version)
+   GAMING GARAGE — Forgot Password Page (Connected to Backend)
    ============================================ */
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -19,13 +19,13 @@ const ForgotPassword = () => {
         body: JSON.stringify({ email }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        alert(errorData.message || "Reset request failed. Please check your email.");
+        alert(data.message || "Reset request failed. Please check your email.");
         return;
       }
 
-      const data = await response.json();
       alert(data.message);
     } catch (err) {
       alert("Unable to connect to server. Please try again later.");

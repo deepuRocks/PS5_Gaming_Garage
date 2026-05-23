@@ -1,44 +1,41 @@
 /* ============================================
-   GAMING GARAGE — Auth Component (Final Version with Validations)
+   GAMING GARAGE — Auth Component (Connected to Backend)
    ============================================ */
 
 import React, { useState } from "react";
+import axios from "axios";
 import "./Auth.css";
 
 const LoginSignup = () => {
   const [tab, setTab] = useState("login");
 
-  const validateForm = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (tab === "signup") {
+      const firstName = e.target[0].value;
+      const lastName = e.target[1].value;
       const email = e.target[2].value;
       const password = e.target[3].value;
       const rePassword = e.target[4].value;
       const countryCode = e.target[5].value;
       const phoneNumber = e.target[6].value;
+      const gender = e.target[7].value;
 
-      // Email validation
+      // ✅ Validations
       if (!email.includes("@")) {
         alert("Email must contain '@'");
         return;
       }
-
-      // Password validation
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&.]{8,}$/;
       if (!passwordRegex.test(password)) {
-        alert(
-          "Password must be at least 8 characters, alphanumeric, and may include special characters",
-        );
+        alert("Password must be at least 8 characters, alphanumeric, and may include special characters");
         return;
       }
-
       if (password !== rePassword) {
         alert("Passwords do not match");
         return;
       }
-
-      // Phone validation
       const phoneRegex = /^\d{10}$/;
       if (!countryCode.startsWith("+")) {
         alert("Country code must start with '+' (e.g. +91, +1)");
@@ -48,8 +45,27 @@ const LoginSignup = () => {
         alert("Phone number must be exactly 10 digits");
         return;
       }
+      if (!gender) {
+        alert("Please select a gender");
+        return;
+      }
 
-      alert("Registration successful!");
+      // ✅ Call backend signup API with all fields
+      try {
+        const res = await axios.post("http://localhost:5000/api/auth/signup", {
+          firstName,
+          lastName,
+          email,
+          password,
+          phoneNumber,
+          countryCode,
+          gender,
+        });
+        alert(res.data.message);
+        setTab("login"); // ✅ redirect user to login form
+      } catch (err) {
+        alert(err.response?.data?.message || "Signup failed");
+      }
     } else {
       const email = e.target[0].value;
       const password = e.target[1].value;
@@ -58,13 +74,30 @@ const LoginSignup = () => {
         alert("Email must contain '@'");
         return;
       }
-
       if (password.length < 8) {
         alert("Password must be at least 8 characters");
         return;
       }
 
-      alert("Login submitted!");
+      // ✅ Call backend login API
+      try {
+        const res = await axios.post("http://localhost:5000/api/auth/login", {
+          email,
+          password,
+        });
+
+        if (res.data.role === "admin") {
+          alert("Admin login successful");
+          window.location.href = "/admin";
+        } else if (res.data.role === "user") {
+          alert("User login successful");
+          window.location.href = "/dashboard";
+        } else {
+          alert(res.data.message);
+        }
+      } catch (err) {
+        alert(err.response?.data?.message || "Login failed");
+      }
     }
   };
 
@@ -91,7 +124,7 @@ const LoginSignup = () => {
         </div>
 
         {tab === "login" ? (
-          <form onSubmit={validateForm}>
+          <form onSubmit={handleSubmit}>
             <input type="email" placeholder="Email" />
             <input type="password" placeholder="Password" />
             <button type="submit">Login</button>
@@ -106,14 +139,13 @@ const LoginSignup = () => {
             </div>
           </form>
         ) : (
-          <form onSubmit={validateForm}>
+          <form onSubmit={handleSubmit}>
             <input type="text" placeholder="First Name" />
             <input type="text" placeholder="Last Name" />
             <input type="email" placeholder="Email" />
             <input type="password" placeholder="Password" />
             <input type="password" placeholder="Re-type Password" />
 
-            {/* ✅ Compact country code dropdown + phone number field */}
             <div style={{ display: "flex", gap: "8px" }}>
               <select defaultValue="+91" style={{ width: "90px" }}>
                 <option value="+91">India +91</option>
