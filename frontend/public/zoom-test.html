@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gaming Garage</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      height: 100%;
+      width: 100%;
+      overflow: auto; /* ✅ allow scrollbars */
+    }
+
+    .zoom-wrapper {
+      transform-origin: top left; /* ✅ scale from top-left */
+    }
+
+    .auth-container {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      justify-content: flex-end;
+      align-items: center;
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .auth-form {
+      background-color: rgba(0, 0, 0, 0.82);
+      padding: 2rem;
+      border-radius: 10px;
+      color: white;
+      width: 25vw;
+      max-width: 400px;
+      min-width: 280px;
+      margin-right: 5%;
+      border: 1px solid rgba(0, 170, 255, 0.25);
+      box-shadow: 0 0 32px rgba(0, 120, 255, 0.15);
+    }
+  </style>
+</head>
+<body>
+  <div class="zoom-wrapper">
+    <div class="auth-container">
+      <div class="auth-form">
+        <h2>Gaming Garage</h2>
+        <input type="text" placeholder="Email" />
+        <input type="password" placeholder="Password" />
+        <button type="submit">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let zoomLevel = 1;
+
+    window.addEventListener('wheel', function (e) {
+      if (e.ctrlKey) {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        zoomLevel = Math.min(Math.max(zoomLevel + delta, 0.5), 2);
+        document.querySelector('.zoom-wrapper').style.transform = `scale(${zoomLevel})`;
+      }
+    }, { passive: false });
+
+    window.addEventListener('keydown', function (e) {
+      if (e.ctrlKey && (e.key === '+' || e.key === '=' || e.key === '-' || e.key === '0')) {
+        e.preventDefault();
+        if (e.key === '0') {
+          zoomLevel = 1;
+        } else {
+          const delta = (e.key === '+' || e.key === '=') ? 0.1 : -0.1;
+          zoomLevel = Math.min(Math.max(zoomLevel + delta, 0.5), 2);
+        }
+        document.querySelector('.zoom-wrapper').style.transform = `scale(${zoomLevel})`;
+      }
+    });
+  </script>
+</body>
+</html>

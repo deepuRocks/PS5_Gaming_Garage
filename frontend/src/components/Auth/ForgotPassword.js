@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
-
+import bgImage from "../../assets/background.jpg";
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -37,7 +37,7 @@ const ForgotPassword = () => {
     <div
       className="auth-container"
       style={{
-        backgroundImage: "url('/background.jpg')",
+        backgroundImage: `url(${bgImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
