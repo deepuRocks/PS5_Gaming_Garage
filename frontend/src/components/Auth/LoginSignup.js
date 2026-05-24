@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Auth.css";
 import bgImage from "../../assets/background.jpg";
+
 const LoginSignup = () => {
   const [tab, setTab] = useState("login");
 
@@ -50,7 +51,7 @@ const LoginSignup = () => {
         return;
       }
 
-      // ✅ Call backend signup API with all fields
+      // ✅ Call backend signup API
       try {
         const res = await axios.post("http://localhost:5000/api/auth/signup", {
           firstName,
@@ -86,6 +87,12 @@ const LoginSignup = () => {
           password,
         });
 
+        // ✅ Save JWT token in localStorage
+        if (res.data.token) {
+          localStorage.setItem("token", res.data.token);
+        }
+
+        // ✅ Redirect based on role
         if (res.data.role === "admin") {
           alert("Admin login successful");
           window.location.href = "/admin";
