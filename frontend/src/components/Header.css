@@ -1,20 +1,21 @@
+/* Header bar */
 .header {
   height: 60px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
+  background: #0a1628;            /* ✅ dark navy */
+  border-bottom: 1px solid #222;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
   z-index: 1000;
+  color: white;
 }
 
-
-
+/* Logo */
 .logo {
   display: flex;
   align-items: center;
@@ -26,33 +27,26 @@
   width: auto;
 }
 
-
 /* Search container */
 .search-container {
   display: flex;
   align-items: center;
-  margin-left: 15px;
+  justify-content: center;
   position: relative;
-}
-
-/* ✅ Search bar styling */
-/* Search container */
-.search-container {
-  display: flex;
-  align-items: center;
-  margin-left: 50px;
-  position: relative;
-  width: 900px; /* ✅ full width */
+  flex: 1;                         /* ✅ center in header */
+  max-width: 600px;
+  margin: 0 40px;
 }
 
 /* Search bar styling */
 .search-bar {
-  width: 100%;
-  padding: 10px 40px 10px 15px; /* ✅ space for icon */
-  border-radius: 30px;          /* ✅ pill shape */
+  width: 1500px;
+  padding: 8px 40px 8px 15px;      /* ✅ space for icon */
+  border-radius: 30px;             /* ✅ pill shape */
   border: 1px solid #ccc;
-  font-size: 1rem;
+  font-size: 0.95rem;
   background: #fff;
+  color: #333;
 }
 
 .search-bar:focus {
@@ -76,17 +70,45 @@
 }
 
 .search-button:hover {
-  color: #00aaff; /* ✅ highlight on hover */
+  color: #00aaff;                  /* ✅ highlight on hover */
 }
 
-
+/* Navigation links (optional top nav) */
 .nav a {
   margin-left: 20px;
-  color: #333;
+  color: #ddd;
   text-decoration: none;
   font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .nav a:hover {
-  color: #007bff;
+  color: #fff;
+}
+
+/* Profile section */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1a253b;             /* ✅ subtle navy pill */
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.profile-image {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.profile-name {
+  font-weight: bold;
+  color: #fff;
+}
+
+.profile-role {
+  font-size: 0.85rem;
+  color: #bbb;
 }

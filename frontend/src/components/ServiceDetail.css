@@ -1,54 +1,74 @@
+/* Service detail container */
 .service-detail-container {
   padding: 20px;
-  font-family: Arial, sans-serif;
+  margin-left: 220px;       /* ✅ respect sidebar */
+  margin-top: 60px;         /* ✅ respect header */
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: "Segoe UI", sans-serif; /* ✅ modern font */
 }
 
+/* Back button */
 .back-button {
   margin-bottom: 15px;
-  padding: 8px 12px;
+  padding: 8px 14px;
   border: none;
-  background: #007bff;
+  background: #007bff;      /* ✅ blue button */
   color: white;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
 }
 
 .back-button:hover {
-  background: #0056b3;
+  background: #0056b3;      /* ✅ darker blue hover */
 }
 
+/* Service image */
 .detail-image {
   width: 100%;
   max-width: 600px;
   border-radius: 8px;
   margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* ✅ subtle shadow */
 }
 
+/* Tabs */
 .tabs {
   margin-top: 20px;
+  display: flex;
+  gap: 10px;
 }
 
 .tabs button {
-  margin-right: 10px;
-  padding: 8px 12px;
+  padding: 8px 14px;
   border: none;
   background: #007bff;
   color: white;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
 }
 
 .tabs button:hover {
   background: #0056b3;
 }
 
-.tab-content {
-  margin-top: 15px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: #f9f9f9;
+.tabs button.active {
+  background: #0a1628;      /* ✅ dark navy active */
+  color: #fff;
 }
 
-
-
+/* Tab content */
+.tab-content {
+  margin-top: 15px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  color: #333;
+  line-height: 1.5;
+}

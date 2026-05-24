@@ -1,51 +1,59 @@
+/* Sidebar */
 .sidebar {
   width: 220px;
-  background: #f5f5f5;        /* ✅ light background */
-  color: #333;                /* ✅ dark text */
+  background: #0a1628;       /* ✅ dark navy background */
+  color: #ddd;               /* ✅ light text */
   position: fixed;
-  top: 60px;                  /* below header */
+  top: 60px;                 /* below header */
   bottom: 0;
   left: 0;
   overflow-y: auto;
-  border-right: 1px solid #fdfdfd; /* subtle divider */
+  border-right: 1px solid #222; /* ✅ subtle divider */
+  padding-top: 20px;
 }
 
+/* Sidebar links */
 .sidebar a {
   display: block;
   padding: 12px 20px;
-  color: #333;
+  color: #ddd;
   text-decoration: none;
   font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .sidebar a:hover {
-  background: #eaeaea;        /* ✅ light hover */
+  background: #1a253b;       /* ✅ lighter navy hover */
   border-radius: 4px;
+  color: #fff;
+}
+
+.sidebar a.active {
+  background: #e53935;       /* ✅ red active highlight */
+  color: #fff;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+/* Sidebar list */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
 }
 
 /* Page content (Dashboard, Profile, etc.) */
 .page-content {
-  margin-left: 200px;     /* ✅ space for sidebar */
-  margin-top: 60px;       /* ✅ space for header */
+  margin-left: 220px;        /* ✅ space for sidebar */
+  margin-top: 60px;          /* ✅ space for header */
   padding: 20px;
   min-height: calc(100vh - 60px);
-  overflow-x: hidden;     /* ✅ prevent horizontal trim */
-}
-
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar li {
-  margin: 15px 0;
-}
-
-.sidebar a {
-  color: #00aaff;
-  text-decoration: none;
-}
-
-.sidebar a:hover {
-  text-decoration: underline;
+  overflow-x: hidden;        /* ✅ prevent horizontal trim */
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
