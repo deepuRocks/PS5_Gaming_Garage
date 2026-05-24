@@ -5,7 +5,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Auth.css";
-
+import bgImage from "../../assets/background.jpg";
 const LoginSignup = () => {
   const [tab, setTab] = useState("login");
 
@@ -103,7 +103,7 @@ const LoginSignup = () => {
 
   return (
     <div className="auth-container">
-      <img src="/background.jpg" alt="Background" className="bg-image" />
+      <img src={bgImage} alt="Background" className="bg-image" />
 
       <div className="auth-form">
         <h2>Gaming Garage</h2>
