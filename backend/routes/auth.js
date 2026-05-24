@@ -36,6 +36,9 @@ router.post("/login", async (req, res) => {
       message: "Login successful",
       role: user.role,
       token: token,
+      id: user.id, // include id for frontend convenience
+      first_name: user.first_name,
+      last_name: user.last_name
     });
   } catch (err) {
     console.error("Login error:", err);
@@ -43,28 +46,23 @@ router.post("/login", async (req, res) => {
   }
 });
 
-
 // 🔑 Signup
 router.post("/signup", async (req, res) => {
   const { firstName, lastName, email, password, phoneNumber, countryCode, gender } = req.body;
 
   try {
-    // Check if user already exists
     const existingUser = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     if (existingUser.rows.length > 0) {
       return res.status(400).json({ message: "User already registered" });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert new user with all fields
     await pool.query(
       `INSERT INTO users (first_name, last_name, email, role, password, phone, country_code, gender)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [firstName, lastName, email, "user", hashedPassword, phoneNumber, countryCode, gender]
     );
-    
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (err) {
@@ -89,7 +87,6 @@ router.post("/forgot-password", async (req, res) => {
       [token, email]
     );
 
-    // ✅ Use Gmail credentials from .env
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -138,6 +135,56 @@ router.post("/reset-password/:token", async (req, res) => {
     res.json({ message: "Password updated successfully" });
   } catch (err) {
     console.error("Reset password error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ✅ Get profile of logged-in user
+router.get("/profile", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ message: "No token provided" });
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const result = await pool.query(
+      "SELECT first_name, last_name, gender, phone, email, country_code FROM users WHERE id = $1",
+      [decoded.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error("Profile fetch error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ✅ Update profile of logged-in user
+router.put("/profile", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) return res.status(401).json({ message: "No token provided" });
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const { first_name, last_name, gender, phone, email, country_code } = req.body;
+
+    await pool.query(
+      `UPDATE users 
+       SET first_name=$1, last_name=$2, gender=$3, phone=$4, email=$5, country_code=$6 
+       WHERE id=$7`,
+      [first_name, last_name, gender, phone, email, country_code, decoded.id]
+    );
+
+    res.json({ message: "Profile updated successfully" });
+  } catch (err) {
+    console.error("Profile update error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });

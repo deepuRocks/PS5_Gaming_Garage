@@ -1,15 +1,18 @@
 import React from "react";
 import "./Sidebar.css";
+import { FaHome, FaTools, FaBox, FaUser } from "react-icons/fa";
 
 export default function Sidebar() {
   return (
-    <aside className="sidebar">
+    <div className="sidebar">
       <ul>
-        <li><a href="/dashboard">🏠 Home</a></li>
-        <li><a href="/services">🛠 Services</a></li>
-        <li><a href="/orders">📦 Orders</a></li>
-        <li><a href="/profile">👤 Profile</a></li>
+        <li><a href="/dashboard" className="active"><FaHome /> Dashboard</a></li>
+        <li><a href="/services"><FaTools /> My Services</a></li>
+        <li><a href="/orders"><FaBox /> My Orders</a></li>
+        <li><a href="/profile"><FaUser /> Profile</a></li>
       </ul>
-    </aside>
+    </div>
   );
 }
+
+

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./Header.css";
 import logoImage from "../assets/logo.png";
+import { FaSearch } from "react-icons/fa";
 
 export default function Header({ onSearch }) {
   const [query, setQuery] = useState("");
@@ -29,8 +30,8 @@ export default function Header({ onSearch }) {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <button className="search-button" onClick={handleSearch}>
-            🔍
+          <button className="search-button">
+            <FaSearch />
           </button>
         </div>
       </div>

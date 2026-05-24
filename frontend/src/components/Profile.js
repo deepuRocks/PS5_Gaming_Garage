@@ -3,14 +3,16 @@ import "./Profile.css";
 
 export default function Profile() {
   const [user, setUser] = useState({
-    username: "",
+    first_name: "",
+    last_name: "",
     gender: "",
     phone: "",
-    email: ""
+    email: "",
+    country_code: ""
   });
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // ✅ Fetch user info from backend
     fetch("http://localhost:5000/api/profile", {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     })
@@ -33,28 +35,49 @@ export default function Profile() {
       body: JSON.stringify(user)
     })
       .then(res => res.json())
-      .then(data => alert("Profile updated successfully!"))
+      .then(() => {
+        alert("Profile updated successfully!");
+        setIsEditing(false);
+      })
       .catch(err => console.error("Error updating profile:", err));
   };
 
   return (
     <div className="profile-container">
       <h1>My Profile</h1>
-      <div className="profile-form">
-        <label>Username:</label>
-        <input name="username" value={user.username} onChange={handleChange} />
 
-        <label>Gender:</label>
-        <input name="gender" value={user.gender} onChange={handleChange} />
+      {!isEditing ? (
+        <div className="profile-details">
+          <p><strong>Name:</strong> {user.first_name} {user.last_name}</p>
+          <p><strong>Gender:</strong> {user.gender}</p>
+          <p><strong>Phone:</strong> {user.country_code} {user.phone}</p>
+          <p><strong>Email:</strong> {user.email}</p>
+          <button onClick={() => setIsEditing(true)}>Edit Profile</button>
+        </div>
+      ) : (
+        <div className="profile-form">
+          <label>First Name:</label>
+          <input name="first_name" value={user.first_name} onChange={handleChange} />
 
-        <label>Phone:</label>
-        <input name="phone" value={user.phone} onChange={handleChange} />
+          <label>Last Name:</label>
+          <input name="last_name" value={user.last_name} onChange={handleChange} />
 
-        <label>Email:</label>
-        <input name="email" value={user.email} onChange={handleChange} />
+          <label>Gender:</label>
+          <input name="gender" value={user.gender} onChange={handleChange} />
 
-        <button onClick={handleSave}>Save Changes</button>
-      </div>
+          <label>Country Code:</label>
+          <input name="country_code" value={user.country_code} onChange={handleChange} />
+
+          <label>Phone:</label>
+          <input name="phone" value={user.phone} onChange={handleChange} />
+
+          <label>Email:</label>
+          <input name="email" value={user.email} onChange={handleChange} />
+
+          <button onClick={handleSave}>Save Changes</button>
+          <button onClick={() => setIsEditing(false)}>Cancel</button>
+        </div>
+      )}
     </div>
   );
 }
