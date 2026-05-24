@@ -1,0 +1,25 @@
+### Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@ps5garage.com",
+  "password": "Gaming@123"
+}
+
+### Forgot Password
+POST http://localhost:5000/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "deepu@gmail.com"
+}
+
+### Reset Password
+POST http://localhost:5000/api/auth/reset-password/someTokenHere
+Content-Type: application/json
+
+{
+  "email": "deepu@gmail.com",
+  "newPassword": "NewPass@123"
+}
