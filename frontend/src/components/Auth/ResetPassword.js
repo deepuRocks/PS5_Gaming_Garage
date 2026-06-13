@@ -28,7 +28,7 @@ const ResetPassword = () => {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, newPassword }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -81,13 +81,15 @@ const ResetPassword = () => {
           />
           <button type="submit">Update Password</button>
         </form>
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => navigate("/")}
-        >
-          ← Back to Login / Signup
-        </button>
+        <div className="back">
+          <button
+            type="button"
+            className="back-link"
+            onClick={() => navigate("/login")}
+          >
+            ← Back to Login / Signup
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,0 +1,57 @@
+/* Profile container */
+.profile-container {
+  padding: 20px;
+  margin-left: 220px;       /* ✅ respect sidebar */
+  margin-top: 60px;         /* ✅ respect header */
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 400px;
+  font-family: "Segoe UI", sans-serif; /* ✅ modern font */
+}
+
+/* Profile form layout */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-form label {
+  margin-top: 12px;
+  font-weight: bold;
+  color: #0a1628;           /* ✅ dark navy text */
+}
+
+/* Inputs */
+.profile-form input {
+  padding: 10px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-form input:focus {
+  outline: none;
+  border-color: #007bff;    /* ✅ blue focus */
+  box-shadow: 0 0 5px rgba(0,123,255,0.4);
+}
+
+/* Save button */
+.profile-form button {
+  margin-top: 20px;
+  padding: 12px;
+  background: #e53935;      /* ✅ red save button */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.profile-form button:hover {
+  background: #c62828;      /* ✅ darker red hover */
+}

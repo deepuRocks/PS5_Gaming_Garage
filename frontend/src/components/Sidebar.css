@@ -1,0 +1,63 @@
+/* Sidebar */
+.sidebar {
+  width: 200px;                 /* ✅ fixed width */
+  background: #0a1628;          /* ✅ dark navy background */
+  color: #ddd;                  /* ✅ light text */
+  position: fixed;
+  top: 60px;                    /* below header */
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  border-right: 1px solid #222; /* subtle divider */
+  padding-top: 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Sidebar links */
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;                    /* ✅ space between icon and text */
+  padding: 12px 20px;
+  color: #fff;                  /* ✅ white text for inactive */
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar a:hover {
+  background: #1a253b;          /* ✅ lighter navy hover */
+  border-radius: 4px;
+  color: #fff;
+}
+
+.sidebar a.active {
+  background: #e63946;          /* ✅ red active highlight */
+  color: #fff;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+/* Sidebar list */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 8px 0;
+}
+
+/* Page content (Dashboard, Profile, etc.) */
+.page-content {
+  margin-left: 200px;           /* ✅ space for sidebar */
+  margin-top: 60px;             /* ✅ space for header */
+  padding: 20px;
+  min-height: calc(100vh - 60px);
+  overflow-x: hidden;           /* ✅ prevent horizontal trim */
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}

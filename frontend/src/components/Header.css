@@ -1,0 +1,114 @@
+/* Header bar */
+.header {
+  height: 60px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #0a1628;            /* ✅ dark navy */
+  border-bottom: 1px solid #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
+  color: white;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-image {
+  height: 40px;
+  width: auto;
+}
+
+/* Search container */
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex: 1;                         /* ✅ center in header */
+  max-width: 600px;
+  margin: 0 40px;
+}
+
+/* Search bar styling */
+.search-bar {
+  width: 1500px;
+  padding: 8px 40px 8px 15px;      /* ✅ space for icon */
+  border-radius: 30px;             /* ✅ pill shape */
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  background: #fff;
+  color: #333;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: #00aaff;
+  box-shadow: 0 0 5px rgba(0,170,255,0.4); /* ✅ subtle glow */
+}
+
+/* Magnifying glass button inside bar */
+.search-button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-button:hover {
+  color: #00aaff;                  /* ✅ highlight on hover */
+}
+
+/* Navigation links (optional top nav) */
+.nav a {
+  margin-left: 20px;
+  color: #ddd;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav a:hover {
+  color: #fff;
+}
+
+/* Profile section */
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1a253b;             /* ✅ subtle navy pill */
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.profile-image {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+}
+
+.profile-name {
+  font-weight: bold;
+  color: #fff;
+}
+
+.profile-role {
+  font-size: 0.85rem;
+  color: #bbb;
+}

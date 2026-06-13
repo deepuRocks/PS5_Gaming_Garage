@@ -1,25 +1,30 @@
-### Login
-POST http://localhost:5000/api/auth/login
+### Get all services
+GET http://localhost:5000/api/services
+
+### Get single service by ID
+GET http://localhost:5000/api/services/1
+
+### Add new service
+POST http://localhost:5000/api/services
 Content-Type: application/json
 
 {
-  "email": "admin@ps5garage.com",
-  "password": "Gaming@123"
+  "title": "Test Service",
+  "description": "This is a test service",
+  "price": 999,
+  "category": "Controller"
 }
 
-### Forgot Password
-POST http://localhost:5000/api/auth/forgot-password
+### Update service by ID
+PUT http://localhost:5000/api/services/1
 Content-Type: application/json
 
 {
-  "email": "deepu@gmail.com"
+  "title": "Updated Service",
+  "description": "Updated description",
+  "price": 1999,
+  "category": "Console"
 }
 
-### Reset Password
-POST http://localhost:5000/api/auth/reset-password/someTokenHere
-Content-Type: application/json
-
-{
-  "email": "deepu@gmail.com",
-  "newPassword": "NewPass@123"
-}
+### Delete service by ID
+DELETE http://localhost:5000/api/services/1

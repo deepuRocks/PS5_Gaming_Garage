@@ -1,0 +1,88 @@
+/* Card */
+.service-detail-container {
+  background: #e4dfd1;       /* ✅ white card */
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 20px;
+  margin-left: 80px;
+  margin-right: 80px;
+  margin-top: 60px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Image inside card */
+.service-detail-container img {
+  max-width: 80%;           /* scale down if too wide */
+  height: auto;              /* keep aspect ratio */
+  object-fit: contain;        /* ✅ no crop */
+  display: block;
+  margin: 0 auto 20px;        /* center with spacing */
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Back button */
+.back-button {
+  margin-bottom: 15px;
+  padding: 8px 14px;
+  border: none;
+  background: #007bff;      /* ✅ blue button */
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
+}
+
+.back-button:hover {
+  background: #0056b3;      /* ✅ darker blue hover */
+}
+
+/* Service image */
+.detail-image {
+  display: block;
+  width: 100%;          /* fill the container width */
+  height: auto;         /* keep natural aspect ratio */
+  object-fit: contain;  /* ✅ ensures full image fits, no crop */
+  margin: 0 auto 20px;  /* center it */
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Tabs */
+.tabs {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.tabs button {
+  padding: 8px 14px;
+  border: none;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
+}
+
+.tabs button:hover {
+  background: #0056b3;
+}
+
+.tabs button.active {
+  background: #0a1628;      /* ✅ dark navy active */
+  color: #fff;
+}
+
+/* Tab content */
+.tab-content {
+  margin-top: 15px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fafafa;
+  color: #333;
+  line-height: 1.5;
+}
