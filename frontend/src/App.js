@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginSignup from "./components/Auth/LoginSignup";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
@@ -8,41 +8,77 @@ import ServiceDetail from "./components/ServiceDetail";
 import Layout from "./components/Layout";
 import Profile from "./components/Profile";
 
+// ✅ ProtectedRoute for normal users
+function ProtectedRoute({ children }) {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+}
+
+// ✅ AdminRoute for admin-only access
+function AdminRoute({ children }) {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role"); // set this at login
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  if (role !== "admin") {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+}
+
 function App() {
   return (
     <Router>
       <Routes>
         {/* Auth routes */}
         <Route path="/" element={<LoginSignup />} />
+        <Route path="/login" element={<LoginSignup />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
 
-        {/* Admin route */}
-        <Route path="/admin" element={<AdminPage />} />
+        {/* Admin route (admin-only) */}
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminPage />
+            </AdminRoute>
+          }
+        />
 
-        {/* Wrapped routes with Header/Footer/Sidebar */}
+        {/* User routes (protected) */}
         <Route
           path="/dashboard"
           element={
-            <Layout>
-              <Dashboard />
-            </Layout>
+            
+              <Layout>
+                <Dashboard />
+              </Layout>
+            
           }
         />
         <Route
           path="/service/:id"
           element={
-            <Layout>
-              <ServiceDetail />
-            </Layout>
+            
+              <Layout>
+                <ServiceDetail />
+              </Layout>
+            
           }
         />
         <Route
           path="/profile"
           element={
-            <Layout>
-              <Profile />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
+              </Layout>
+            </ProtectedRoute>
           }
         />
       </Routes>

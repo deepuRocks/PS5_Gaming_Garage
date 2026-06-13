@@ -13,11 +13,14 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/forgot-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const response = await fetch(
+        "http://localhost:5000/api/auth/forgot-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        },
+      );
 
       const data = await response.json();
 
@@ -54,13 +57,15 @@ const ForgotPassword = () => {
           />
           <button type="submit">Send Reset Link</button>
         </form>
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() => navigate("/")}
-        >
-          ← Back to Login / Signup
-        </button>
+        <div className="back">
+          <button
+            type="button"
+            className="back-link"
+            onClick={() => navigate("/login")}
+          >
+            ← Back to Login / Signup
+          </button>
+        </div>
       </div>
     </div>
   );

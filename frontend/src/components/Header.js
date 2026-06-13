@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./Header.css";
 import logoImage from "../assets/logo.png";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";   // ✅ import here
 
 export default function Header({ onSearch }) {
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();                // ✅ call at top level
 
   const handleSearch = () => {
     onSearch(query); // send search term to Dashboard
@@ -12,8 +14,14 @@ export default function Header({ onSearch }) {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      handleSearch(); // ✅ trigger search on Enter
+      handleSearch();
     }
+  };
+
+  const handleLogout = (e) => {
+    e.preventDefault();              // ✅ prevent default link behavior
+    localStorage.removeItem("token"); // ✅ clear session
+    navigate("/login");               // ✅ redirect to login/signup
   };
 
   return (
@@ -37,7 +45,7 @@ export default function Header({ onSearch }) {
       </div>
       <nav className="nav">
         <a href="/cart">Cart</a>
-        <a href="/logout">Logout</a>
+        <a href="/login" onClick={handleLogout}>Logout</a> {/* ✅ text link works as button */}
       </nav>
     </header>
   );

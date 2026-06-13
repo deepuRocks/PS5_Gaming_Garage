@@ -129,3 +129,22 @@ button[type="submit"]:hover {
 .forgot-link:hover {
   text-decoration: underline;
 }
+
+/* ← Back to Login / Signup */
+.back {
+  margin-top: 10px;
+  text-align: right;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  color: #00aaff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
