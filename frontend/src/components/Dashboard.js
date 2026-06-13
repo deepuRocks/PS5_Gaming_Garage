@@ -23,9 +23,10 @@ export default function Dashboard({ searchTerm = "" }) {
   if (loading) return <h2>Loading services...</h2>;
 
   // ✅ Filter services based on searchTerm
-  const filteredServices = services.filter((service) =>
-    service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    service.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredServices = services.filter(
+    (service) =>
+      service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      service.category.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -42,10 +43,11 @@ export default function Dashboard({ searchTerm = "" }) {
               onClick={() => navigate(`/service/${service.id}`)}
             >
               <img
-                src={`https://via.placeholder.com/300x180?text=${service.title}`}
+                src={service.image_url}
                 alt={service.title}
                 className="service-image"
               />
+
               <h2>{service.title}</h2>
               <p>Category: {service.category}</p>
               <button>Add to Cart</button>

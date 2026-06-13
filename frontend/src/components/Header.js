@@ -20,7 +20,7 @@ export default function Header({ onSearch }) {
     <header className="header">
       <div className="logo">
         <img src={logoImage} alt="PS5 Gaming Garage" className="logo-image" />
-        <span>PS5 Gaming Garage</span>
+        <span><b>Hyderabad Gaming Garage</b></span>
         <div className="search-container">
           <input
             type="text"
@@ -36,8 +36,6 @@ export default function Header({ onSearch }) {
         </div>
       </div>
       <nav className="nav">
-        <a href="/dashboard">Dashboard</a>
-        <a href="/profile">Profile</a>
         <a href="/cart">Cart</a>
         <a href="/logout">Logout</a>
       </nav>

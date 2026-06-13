@@ -5,7 +5,7 @@
   min-height: 100vh;                   /* full height */
   overflow-y: auto;                    /* allow vertical scroll */
   margin-bottom: 80px;                 /* ✅ space before footer */
-  background: #fff;                    /* clean white background */
+  background: #e4dfd1;                    /* clean white background */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }

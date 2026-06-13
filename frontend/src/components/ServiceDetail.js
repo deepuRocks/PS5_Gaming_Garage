@@ -26,10 +26,11 @@ export default function ServiceDetail() {
       </button>
 
       <img
-        src={`https://via.placeholder.com/600x300?text=${service.title}`}
+        src={service.image_url}
         alt={service.title}
-        className="detail-image"
+        className="service-image"
       />
+
       <h1>{service.title}</h1>
       <p>
         <strong>₹{service.price}</strong>
