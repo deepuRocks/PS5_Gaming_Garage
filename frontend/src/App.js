@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import ServiceDetail from "./components/ServiceDetail";
 import Layout from "./components/Layout";
 import Profile from "./components/Profile";
+import MyOrders from "./components/MyOrders";
 
 // ✅ ProtectedRoute for normal users
 function ProtectedRoute({ children }) {
@@ -79,6 +80,16 @@ function App() {
                 <Profile />
               </Layout>
             </ProtectedRoute>
+          }
+        />
+                <Route
+          path="/orders"
+          element={
+            
+              <Layout>
+                <MyOrders />
+              </Layout>
+            
           }
         />
       </Routes>
