@@ -12,34 +12,37 @@ export default function Profile() {
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/profile", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+// Fetch profile
+useEffect(() => {
+  fetch("http://localhost:5000/api/auth/profile", {
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+  })
+    .then(res => res.json())
+    .then(data => setUser(data))
+    .catch(err => console.error("Error fetching profile:", err));
+}, []);
+
+// Save profile
+const handleSave = () => {
+  fetch("http://localhost:5000/api/auth/profile", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    },
+    body: JSON.stringify(user)
+  })
+    .then(res => res.json())
+    .then(() => {
+      alert("Profile updated successfully!");
+      setIsEditing(false);
     })
-      .then(res => res.json())
-      .then(data => setUser(data))
-      .catch(err => console.error("Error fetching profile:", err));
-  }, []);
+    .catch(err => console.error("Error updating profile:", err));
+};
+
 
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
-  const handleSave = () => {
-    fetch("http://localhost:5000/api/profile", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
-      },
-      body: JSON.stringify(user)
-    })
-      .then(res => res.json())
-      .then(() => {
-        alert("Profile updated successfully!");
-        setIsEditing(false);
-      })
-      .catch(err => console.error("Error updating profile:", err));
   };
 
   return (

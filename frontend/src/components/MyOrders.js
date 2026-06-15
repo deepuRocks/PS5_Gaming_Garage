@@ -6,7 +6,16 @@ import "./MyOrders.css";
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cancelOrderId, setCancelOrderId] = useState(null);
+  const [cancelReason, setCancelReason] = useState("");
   const navigate = useNavigate();
+
+  const cancelReasons = [
+    "Found cheaper elsewhere",
+    "Changed my mind",
+    "Service delay",
+    "Other",
+  ];
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -23,6 +32,27 @@ export default function MyOrders() {
         setLoading(false);
       });
   }, []);
+
+  const handleCancelOrder = (orderId) => {
+    if (!cancelReason) {
+      alert("Please select a reason before cancelling.");
+      return;
+    }
+    const token = localStorage.getItem("token");
+    axios
+      .put(
+        `http://localhost:5000/api/orders/${orderId}/cancel`,
+        { reason: cancelReason },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      .then(() => {
+        alert("Order cancelled successfully.");
+        setOrders(orders.filter((o) => o.order_id !== orderId));
+        setCancelOrderId(null);
+        setCancelReason("");
+      })
+      .catch((err) => console.error("Error cancelling order:", err));
+  };
 
   if (loading) return <h2>Loading your orders...</h2>;
   if (orders.length === 0) return <p>No orders found.</p>;
@@ -60,13 +90,34 @@ export default function MyOrders() {
               <td>₹{order.total}</td>
               <td>{new Date(order.created_at).toLocaleDateString()}</td>
               <td>
-                {/* ✅ onClick navigate to service detail */}
                 <button
                   onClick={() => navigate(`/service/${order.service_id}`)}
                   className="order-btn"
                 >
                   View Service
                 </button>
+                {cancelOrderId === order.order_id ? (
+                  <div>
+                    {cancelReasons.map((r) => (
+                      <label key={r}>
+                        <input
+                          type="radio"
+                          name={`cancel-${order.order_id}`}
+                          value={r}
+                          onChange={() => setCancelReason(r)}
+                        />
+                        {r}
+                      </label>
+                    ))}
+                    <button onClick={() => handleCancelOrder(order.order_id)}>
+                      Confirm Cancel
+                    </button>
+                  </div>
+                ) : (
+                  <button onClick={() => setCancelOrderId(order.order_id)}>
+                    Cancel Order
+                  </button>
+                )}
               </td>
             </tr>
           ))}

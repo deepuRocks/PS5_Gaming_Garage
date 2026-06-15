@@ -112,3 +112,10 @@
   font-size: 0.85rem;
   color: #bbb;
 }
+
+.nav .welcome {
+  margin-right: 15px;
+  font-weight: 600;
+  color: #fff;
+  text-box: bold
+}

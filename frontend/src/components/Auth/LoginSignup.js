@@ -30,7 +30,9 @@ const LoginSignup = () => {
       }
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&.]{8,}$/;
       if (!passwordRegex.test(password)) {
-        alert("Password must be at least 8 characters, alphanumeric, and may include special characters");
+        alert(
+          "Password must be at least 8 characters, alphanumeric, and may include special characters",
+        );
         return;
       }
       if (password !== rePassword) {
@@ -90,6 +92,8 @@ const LoginSignup = () => {
         // ✅ Save JWT token in localStorage
         if (res.data.token) {
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("first_name", res.data.first_name); // ✅ save first name
+          localStorage.setItem("last_name", res.data.last_name); // ✅ save last name
         }
 
         // ✅ Redirect based on role

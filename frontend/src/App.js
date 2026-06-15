@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import LoginSignup from "./components/Auth/LoginSignup";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import ResetPassword from "./components/Auth/ResetPassword";
@@ -8,6 +13,7 @@ import ServiceDetail from "./components/ServiceDetail";
 import Layout from "./components/Layout";
 import Profile from "./components/Profile";
 import MyOrders from "./components/MyOrders";
+import Cart from "./components/Cart";
 
 // ✅ ProtectedRoute for normal users
 function ProtectedRoute({ children }) {
@@ -55,21 +61,17 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            
-              <Layout>
-                <Dashboard />
-              </Layout>
-            
+            <Layout>
+              <Dashboard />
+            </Layout>
           }
         />
         <Route
           path="/service/:id"
           element={
-            
-              <Layout>
-                <ServiceDetail />
-              </Layout>
-            
+            <Layout>
+              <ServiceDetail />
+            </Layout>
           }
         />
         <Route
@@ -82,14 +84,22 @@ function App() {
             </ProtectedRoute>
           }
         />
-                <Route
+        <Route
           path="/orders"
           element={
-            
+            <Layout>
+              <MyOrders />
+            </Layout>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
               <Layout>
-                <MyOrders />
+                <Cart />
               </Layout>
-            
+            </ProtectedRoute>
           }
         />
       </Routes>

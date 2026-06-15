@@ -16,23 +16,26 @@ router.get("/", async (req, res) => {
 });
 
 // -----------------------------
-// GET single service by ID
+// GET single service by ID + options
 // -----------------------------
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await pool.query("SELECT * FROM services WHERE id = $1", [id]);
 
-    if (result.rows.length === 0) {
+    const service = await pool.query("SELECT * FROM services WHERE id = $1", [id]);
+    if (service.rows.length === 0) {
       return res.status(404).json({ msg: "Service not found" });
     }
 
-    res.json(result.rows[0]);
+    const options = await pool.query("SELECT * FROM service_options WHERE service_id = $1", [id]);
+
+    res.json({ service: service.rows[0], options: options.rows });
   } catch (err) {
     console.error("Error fetching service by ID:", err.message);
     res.status(500).send("Server error");
   }
 });
+
 
 // -----------------------------
 // POST new service

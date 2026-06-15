@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Header.css";
 import logoImage from "../assets/logo.png";
 import { FaSearch } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";   // ✅ import here
+import { useNavigate } from "react-router-dom";
 
 export default function Header({ onSearch }) {
   const [query, setQuery] = useState("");
-  const navigate = useNavigate();                // ✅ call at top level
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const first = localStorage.getItem("first_name") || "";
+    const last = localStorage.getItem("last_name") || "";
+    if (first || last) {
+      setUsername(`${first} ${last}`.trim());
+    }
+  }, []);
 
   const handleSearch = () => {
-    onSearch(query); // send search term to Dashboard
+    onSearch(query);
   };
 
   const handleKeyDown = (e) => {
@@ -19,9 +28,11 @@ export default function Header({ onSearch }) {
   };
 
   const handleLogout = (e) => {
-    e.preventDefault();              // ✅ prevent default link behavior
-    localStorage.removeItem("token"); // ✅ clear session
-    navigate("/login");               // ✅ redirect to login/signup
+    e.preventDefault();
+    localStorage.removeItem("token");
+    localStorage.removeItem("first_name");
+    localStorage.removeItem("last_name");
+    navigate("/login");
   };
 
   return (
@@ -44,8 +55,9 @@ export default function Header({ onSearch }) {
         </div>
       </div>
       <nav className="nav">
+        {username && <span className="welcome">Hello {username}</span>}
         <a href="/cart">Cart</a>
-        <a href="/login" onClick={handleLogout}>Logout</a> {/* ✅ text link works as button */}
+        <a href="/login" onClick={handleLogout}>Logout</a>
       </nav>
     </header>
   );
