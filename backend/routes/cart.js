@@ -15,12 +15,43 @@ router.post("/", async (req, res) => {
 
     const { service_id, option_name, quantity } = req.body;
 
-    const result = await pool.query(
-      `INSERT INTO cart (user_id, service_id, option_name, quantity, created_at, updated_at)
-       VALUES ($1, $2, $3, $4, NOW(), NOW())
-       RETURNING *`,
-      [decoded.id, service_id, option_name, quantity],
+    if (!service_id || !option_name) {
+      return res
+        .status(400)
+        .json({ error: "service_id and option_name are required" });
+    }
+
+    // ✅ Check if service + option exist
+    const optionCheck = await pool.query(
+      `SELECT * FROM service_options WHERE service_id=$1 AND option_name=$2`,
+      [service_id, option_name.trim()]
     );
+    if (optionCheck.rows.length === 0) {
+      return res.status(400).json({ error: "Invalid service option" });
+    }
+
+    // ✅ If item already exists in cart, update quantity instead of duplicate insert
+    const existing = await pool.query(
+      `SELECT * FROM cart WHERE user_id=$1 AND service_id=$2 AND option_name=$3`,
+      [decoded.id, service_id, option_name.trim()]
+    );
+
+    let result;
+    if (existing.rows.length > 0) {
+      result = await pool.query(
+        `UPDATE cart 
+         SET quantity = quantity + $1, updated_at=NOW() 
+         WHERE id=$2 RETURNING *`,
+        [quantity, existing.rows[0].id]
+      );
+    } else {
+      result = await pool.query(
+        `INSERT INTO cart (user_id, service_id, option_name, quantity, created_at, updated_at)
+         VALUES ($1, $2, $3, $4, NOW(), NOW())
+         RETURNING *`,
+        [decoded.id, service_id, option_name.trim(), quantity]
+      );
+    }
 
     res.json(result.rows[0]);
   } catch (err) {
@@ -41,14 +72,14 @@ router.get("/", async (req, res) => {
 
     const result = await pool.query(
       `SELECT c.id, c.service_id, c.option_name, c.quantity, c.created_at, c.updated_at,
-       s.title AS service_name, so.price, s.image_url
-FROM cart c
-JOIN services s ON c.service_id = s.id
-JOIN service_options so 
-  ON c.service_id = so.service_id 
- AND c.option_name = so.option_name
-WHERE c.user_id = $1`,
-      [decoded.id],
+              s.title AS service_name, so.price, s.image_url
+       FROM cart c
+       JOIN services s ON c.service_id = s.id
+       JOIN service_options so 
+         ON c.service_id = so.service_id 
+        AND LOWER(c.option_name) = LOWER(so.option_name) -- ✅ case-insensitive match
+       WHERE c.user_id = $1`,
+      [decoded.id]
     );
 
     res.json(result.rows);
@@ -66,7 +97,7 @@ router.put("/:id", async (req, res) => {
 
     const result = await pool.query(
       "UPDATE cart SET quantity=$1, updated_at=NOW() WHERE id=$2 RETURNING *",
-      [quantity, id],
+      [quantity, id]
     );
 
     res.json(result.rows[0]);

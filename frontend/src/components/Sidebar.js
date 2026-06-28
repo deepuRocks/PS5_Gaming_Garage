@@ -1,6 +1,6 @@
 import React from "react";
 import "./Sidebar.css";
-import { FaHome, FaBox, FaUser } from "react-icons/fa";
+import { FaHome, FaBox, FaUser, FaEnvelope, FaInfoCircle } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
@@ -36,6 +36,22 @@ export default function Sidebar() {
             className={location.pathname === "/profile" ? "active" : ""}
           >
             <FaUser /> Profile
+          </div>
+        </li>
+                <li>
+          <div
+            onClick={() => handleNav("/About US")}
+            className={location.pathname === "/" ? "active" : ""}
+          >
+            <FaInfoCircle /> About US
+          </div>
+        </li>
+                <li>
+          <div
+            onClick={() => handleNav("/Contact US")}
+            className={location.pathname === "/" ? "active" : ""}
+          >
+            <FaEnvelope /> Contact US
           </div>
         </li>
       </ul>

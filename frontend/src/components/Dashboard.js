@@ -26,7 +26,7 @@ export default function Dashboard({ searchTerm = "" }) {
   const filteredServices = services.filter(
     (service) =>
       service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      service.category.toLowerCase().includes(searchTerm.toLowerCase()),
+      service.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -40,18 +40,16 @@ export default function Dashboard({ searchTerm = "" }) {
             <div
               key={service.id}
               className="service-card"
-              onClick={() => navigate(`/service/${service.id}`)}
+              onClick={() => navigate(`/service/${service.id}`)} // ✅ navigate to ServiceDetail
             >
               <img
                 src={service.image_url}
                 alt={service.title}
                 className="service-image"
               />
-
               <h2>{service.title}</h2>
               <p>Category: {service.category}</p>
-              <button>Add to Cart</button>
-              <button>Order Now</button>
+              {/* ✅ Removed Add to Cart and Order Now buttons */}
             </div>
           ))
         ) : (

@@ -7,7 +7,8 @@ const jwt = require("jsonwebtoken");
 router.post("/", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader) return res.status(401).json({ message: "No token provided" });
+    if (!authHeader)
+      return res.status(401).json({ message: "No token provided" });
 
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -25,17 +26,16 @@ router.post("/", async (req, res) => {
       `INSERT INTO orders (user_id, service_id, option_name, price, quantity, total, created_at)
        VALUES ($1, $2, $3, $4, $5, $6, NOW())
        RETURNING *`,
-      [decoded.id, service_id, option_name, price, quantity, total]
+      [decoded.id, service_id, option_name, price, quantity, total],
     );
-// ✅ Clear cart for this user
-await pool.query("DELETE FROM cart WHERE user_id=$1", [decoded.id]);
+    // ✅ Clear cart for this user
+    await pool.query("DELETE FROM cart WHERE user_id=$1", [decoded.id]);
     res.json(result.rows[0]);
   } catch (err) {
     console.error("Error creating order:", err.message);
     res.status(500).json({ error: "Failed to create order" });
   }
 });
-
 
 // ✅ Get all orders for logged-in user
 router.get("/", async (req, res) => {
@@ -84,9 +84,12 @@ router.put("/:id/cancel", async (req, res) => {
     const { id } = req.params;
     const { reason } = req.body;
 
+    // ✅ Truncate reason if too long (safety)
+    const statusText = `Cancelled: ${reason}`.substring(0, 100);
+
     const result = await pool.query(
       "UPDATE orders SET status=$1 WHERE id=$2 AND user_id=$3 RETURNING *",
-      [`Cancelled: ${reason}`, id, decoded.id],
+      [statusText, id, decoded.id],
     );
 
     if (result.rows.length === 0) {

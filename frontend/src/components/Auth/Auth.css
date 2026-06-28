@@ -28,9 +28,10 @@ body, html {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;   /* ✅ scales with zoom */
+  object-fit: fit;   /* ✅ fills viewport, scales proportionally */
   z-index: -1;
 }
+
 
 /* Form card */
 .auth-form {

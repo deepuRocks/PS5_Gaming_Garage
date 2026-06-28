@@ -43,6 +43,13 @@ export default function ServiceDetail() {
       return;
     }
 
+    // ✅ Ensure service_id is always valid
+    const serviceId = service.id || service.service_id;
+    if (!serviceId) {
+      alert("Service ID missing, cannot add to cart.");
+      return;
+    }
+
     fetch("http://localhost:5000/api/cart", {
       method: "POST",
       headers: {
@@ -50,12 +57,15 @@ export default function ServiceDetail() {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        service_id: service.id,
-        option_name: selectedOption, // ✅ send the chosen option
+        service_id: serviceId,
+        option_name: selectedOption.trim(), // ✅ ensure exact match
         quantity: 1,
       }),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to add to cart");
+        return res.json();
+      })
       .then((data) => {
         alert("Added to cart!");
         console.log("Cart item saved:", data);
@@ -64,12 +74,41 @@ export default function ServiceDetail() {
   };
 
   const handleOrderNow = () => {
-    if (!isLoggedIn) {
+    const token = localStorage.getItem("token");
+    if (!token) {
       alert("Please login to proceed with payment.");
-    } else {
-      // ✅ Instead of placing order directly, go to cart
-      navigate("/cart");
+      return;
     }
+
+    // ✅ Ensure service_id is always valid
+    const serviceId = service.id || service.service_id;
+    if (!serviceId) {
+      alert("Service ID missing, cannot place order.");
+      return;
+    }
+
+    fetch("http://localhost:5000/api/cart", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        service_id: serviceId,
+        option_name: selectedOption.trim(),
+        quantity: 1,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to add to cart");
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Order item saved:", data);
+        // ✅ Navigate to cart after adding
+        navigate("/cart");
+      })
+      .catch((err) => console.error("Error placing order:", err));
   };
 
   return (
@@ -107,8 +146,12 @@ export default function ServiceDetail() {
         </div>
       )}
 
-      <button onClick={handleAddToCart}>Add to Cart</button>
-      <button onClick={handleOrderNow}>Order Now</button>
+      <button className="action-btn" onClick={handleAddToCart}>
+        Add to Cart
+      </button>
+      <button className="action-btn" onClick={handleOrderNow}>
+        Order Now
+      </button>
 
       <div className="tabs">
         <button onClick={() => setActiveTab("details")}>Details</button>

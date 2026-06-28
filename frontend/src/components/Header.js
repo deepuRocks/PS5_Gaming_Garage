@@ -2,11 +2,14 @@ import React, { useState, useEffect } from "react";
 import "./Header.css";
 import logoImage from "../assets/logo.png";
 import { FaSearch } from "react-icons/fa";
+import { FaShoppingCart } from "react-icons/fa";   // ✅ cart icon
+import { FaSignOutAlt } from "react-icons/fa";     // ✅ logout icon
 import { useNavigate } from "react-router-dom";
 
 export default function Header({ onSearch }) {
   const [query, setQuery] = useState("");
   const [username, setUsername] = useState("");
+  const [cartCount, setCartCount] = useState(0);   // ✅ cart count
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +18,31 @@ export default function Header({ onSearch }) {
     if (first || last) {
       setUsername(`${first} ${last}`.trim());
     }
+  }, []);
+
+  // ✅ Fetch cart count initially
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    fetch("http://localhost:5000/api/cart", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setCartCount(data.length))
+      .catch((err) => console.error("Error fetching cart count:", err));
+
+    // ✅ Listen for cart updates
+    const updateCart = () => {
+      fetch("http://localhost:5000/api/cart", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => setCartCount(data.length));
+    };
+
+    window.addEventListener("cartUpdated", updateCart);
+    return () => window.removeEventListener("cartUpdated", updateCart);
   }, []);
 
   const handleSearch = () => {
@@ -56,8 +84,12 @@ export default function Header({ onSearch }) {
       </div>
       <nav className="nav">
         {username && <span className="welcome">Hello {username}</span>}
-        <a href="/cart">Cart</a>
-        <a href="/login" onClick={handleLogout}>Logout</a>
+        <a href="/cart">
+          <FaShoppingCart /> Cart ({cartCount})
+        </a>
+        <a href="/login" onClick={handleLogout}>
+          <FaSignOutAlt /> Logout
+        </a>
       </nav>
     </header>
   );

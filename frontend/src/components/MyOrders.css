@@ -1,10 +1,12 @@
 .orders-container {
-  margin-left: 200px;
-  margin-top: 60px;
-  padding: 20px;
-  font-family: "Segoe UI", sans-serif;
-  background-color: #f5f7fa;
-  min-height: 100vh;
+  padding: 20px;                        /* ✅ same as dashboard */
+  font-family: "Segoe UI", sans-serif;  /* ✅ consistent font */
+  min-height: 100vh;                    /* full height */
+  overflow-y: auto;                     /* allow vertical scroll */
+  margin-bottom: 80px;                  /* ✅ space before footer */
+  background: #e4dfd1;                  /* ✅ same background as dashboard */
+  border-radius: 8px;                   /* ✅ rounded corners */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);/* ✅ subtle shadow */
 }
 
 .orders-container h1 {
@@ -60,4 +62,68 @@
 
 .order-btn:hover {
   background-color: #1a253b;
+}
+
+/* Cancel Order button */
+.btn-cancel-order {
+  background: #dc3545;       /* ✅ Bootstrap danger red */
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-cancel-order:hover {
+  background: #c82333;       /* ✅ darker hover */
+  transform: translateY(-1px);
+}
+
+.btn-cancel-order:active {
+  background: #a71d2a;       /* ✅ pressed state */
+  transform: translateY(0);
+}
+
+/* Confirm Cancel button */
+.btn-confirm-cancel {
+  background: #0a1628;       /* ✅ Bootstrap primary blue */
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-top: 10px;
+}
+
+.btn-confirm-cancel:hover {
+  background: #1a253b;
+  transform: translateY(-1px);
+}
+
+.btn-confirm-cancel:active {
+  background: #0a1628;
+  transform: translateY(0);
+}
+
+
+/* Cancel reason options */
+.cancel-reasons {
+  display: flex;
+  flex-direction: column;   /* ✅ stack vertically */
+  gap: 8px;                 /* ✅ spacing between options */
+  margin-top: 10px;
+}
+
+.cancel-reasons label {
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
 }

@@ -43,7 +43,7 @@ export default function MyOrders() {
       .put(
         `http://localhost:5000/api/orders/${orderId}/cancel`,
         { reason: cancelReason },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` } },
       )
       .then(() => {
         alert("Order cancelled successfully.");
@@ -97,7 +97,7 @@ export default function MyOrders() {
                   View Service
                 </button>
                 {cancelOrderId === order.order_id ? (
-                  <div>
+                  <div className="cancel-reasons">
                     {cancelReasons.map((r) => (
                       <label key={r}>
                         <input
@@ -109,12 +109,18 @@ export default function MyOrders() {
                         {r}
                       </label>
                     ))}
-                    <button onClick={() => handleCancelOrder(order.order_id)}>
+                    <button
+                      onClick={() => handleCancelOrder(order.order_id)}
+                      className="btn-confirm-cancel"
+                    >
                       Confirm Cancel
                     </button>
                   </div>
                 ) : (
-                  <button onClick={() => setCancelOrderId(order.order_id)}>
+                  <button
+                    onClick={() => setCancelOrderId(order.order_id)}
+                    className="btn-cancel-order"
+                  >
                     Cancel Order
                   </button>
                 )}

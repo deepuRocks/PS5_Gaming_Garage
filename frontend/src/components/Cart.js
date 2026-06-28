@@ -84,12 +84,13 @@ export default function Cart() {
         }).then((res) => res.json()),
       ),
     )
+    
       .then(() => {
         alert("Order placed successfully!");
         setCart([]); // ✅ clear cart in UI
+        window.dispatchEvent(new Event("cartUpdated")); // ✅ notify header
         navigate("/orders");
       })
-
 
       .catch((err) => console.error("Error placing order:", err));
   };
