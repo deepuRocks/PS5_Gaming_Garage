@@ -14,6 +14,7 @@ import Layout from "./components/Layout";
 import Profile from "./components/Profile";
 import MyOrders from "./components/MyOrders";
 import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
 
 // ✅ ProtectedRoute for normal users
 function ProtectedRoute({ children }) {
@@ -98,6 +99,16 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <Cart />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Checkout />
               </Layout>
             </ProtectedRoute>
           }

@@ -119,4 +119,49 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ✅ Clear entire cart
+router.delete("/clear", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader)
+      return res.status(401).json({ message: "No token provided" });
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    await pool.query("DELETE FROM cart WHERE user_id = $1", [userId]);
+
+    res.json({ message: "Cart emptied successfully" });
+  } catch (err) {
+    console.error("Error clearing cart:", err.message);
+    res.status(500).json({ error: "Failed to clear cart" });
+  }
+});
+
+// ✅ Delete single cart item by ID
+router.delete("/:id", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader)
+      return res.status(401).json({ message: "No token provided" });
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.id;
+
+    const { id } = req.params;
+    await pool.query("DELETE FROM cart WHERE id = $1 AND user_id = $2", [
+      id,
+      userId,
+    ]);
+
+    res.json({ message: "Cart item deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting cart item:", err.message);
+    res.status(500).json({ error: "Failed to delete cart item" });
+  }
+});
+
+
 module.exports = router;

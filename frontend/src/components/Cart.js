@@ -1,5 +1,7 @@
+// src/components/Cart.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // ✅ import axios
 import "./Cart.css";
 
 export default function Cart() {
@@ -60,39 +62,27 @@ export default function Cart() {
   const getTotal = () =>
     cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const placeOrder = () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("Please login to place orders.");
+  // ✅ Instead of placing order directly, navigate to Checkout
+  const proceedToCheckout = () => {
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
       return;
     }
+    navigate("/checkout"); // go to Checkout.js form
+  };
 
-    Promise.all(
-      cart.map((item) =>
-        fetch("http://localhost:5000/api/orders", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            service_id: item.service_id,
-            option_name: item.option_name, // ✅ include option_name in order
-            price: item.price,
-            quantity: item.quantity,
-          }),
-        }).then((res) => res.json()),
-      ),
-    )
-    
-      .then(() => {
-        alert("Order placed successfully!");
-        setCart([]); // ✅ clear cart in UI
-        window.dispatchEvent(new Event("cartUpdated")); // ✅ notify header
-        navigate("/orders");
+    // ✅ empty cart function
+  const emptyCart = () => {
+    const token = localStorage.getItem("token");
+    axios
+      .delete("http://localhost:5000/api/cart/clear", {
+        headers: { Authorization: `Bearer ${token}` },
       })
-
-      .catch((err) => console.error("Error placing order:", err));
+      .then(() => {
+        alert("Cart emptied successfully.");
+        setCart([]); // ✅ clear cart state
+      })
+      .catch((err) => console.error("Error emptying cart:", err));
   };
 
   return (
@@ -116,7 +106,7 @@ export default function Cart() {
               {cart.map((item, i) => (
                 <tr key={item.id}>
                   <td>{item.service_name}</td>
-                  <td>{item.option_name}</td> {/* ✅ show option_name */}
+                  <td>{item.option_name}</td>
                   <td>
                     <button onClick={() => updateQuantity(i, -1)}>-</button>
                     {item.quantity}
@@ -129,7 +119,10 @@ export default function Cart() {
             </tbody>
           </table>
           <h2>Grand Total: ₹{getTotal()}</h2>
-          <button onClick={placeOrder}>Place Order</button>
+          <button onClick={proceedToCheckout}>Proceed to Checkout</button>
+          <button className="btn-empty-cart" onClick={emptyCart}>
+            Empty Cart
+          </button>
         </>
       )}
     </div>

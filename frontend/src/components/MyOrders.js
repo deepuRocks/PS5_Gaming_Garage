@@ -69,6 +69,8 @@ export default function MyOrders() {
             <th>Service</th>
             <th>Image</th>
             <th>Status</th>
+            <th>Quantity</th>   {/* ✅ new column */}
+            <th>Price</th>      {/* ✅ new column */}
             <th>Total</th>
             <th>Date</th>
             <th>Actions</th>
@@ -87,6 +89,8 @@ export default function MyOrders() {
                 />
               </td>
               <td>{order.status}</td>
+              <td>{order.quantity}</td>       {/* ✅ show quantity */}
+              <td>₹{order.price}</td>         {/* ✅ show price */}
               <td>₹{order.total}</td>
               <td>{new Date(order.created_at).toLocaleDateString()}</td>
               <td>
