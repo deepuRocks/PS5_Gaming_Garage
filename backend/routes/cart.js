@@ -21,7 +21,6 @@ router.post("/", async (req, res) => {
         .json({ error: "service_id and option_name are required" });
     }
 
-    // ✅ Check if service + option exist
     const optionCheck = await pool.query(
       `SELECT * FROM service_options WHERE service_id=$1 AND option_name=$2`,
       [service_id, option_name.trim()]
@@ -30,7 +29,6 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Invalid service option" });
     }
 
-    // ✅ If item already exists in cart, update quantity instead of duplicate insert
     const existing = await pool.query(
       `SELECT * FROM cart WHERE user_id=$1 AND service_id=$2 AND option_name=$3`,
       [decoded.id, service_id, option_name.trim()]
@@ -55,12 +53,11 @@ router.post("/", async (req, res) => {
 
     res.json(result.rows[0]);
   } catch (err) {
-    console.error("Error adding to cart:", err.message);
     res.status(500).json({ error: "Failed to add to cart" });
   }
 });
 
-// ✅ Get cart items for logged-in user (with correct option price)
+// ✅ Get cart items
 router.get("/", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -77,20 +74,19 @@ router.get("/", async (req, res) => {
        JOIN services s ON c.service_id = s.id
        JOIN service_options so 
          ON c.service_id = so.service_id 
-        AND LOWER(c.option_name) = LOWER(so.option_name) -- ✅ case-insensitive match
+        AND LOWER(c.option_name) = LOWER(so.option_name)
        WHERE c.user_id = $1`,
       [decoded.id]
     );
 
     res.json(result.rows);
   } catch (err) {
-    console.error("Error fetching cart:", err.message);
     res.status(500).json({ error: "Failed to fetch cart" });
   }
 });
 
 // ✅ Update quantity
-router.put("/:id", async (req, res) => {
+router.put("/:id(\\d+)", async (req, res) => {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
@@ -102,24 +98,11 @@ router.put("/:id", async (req, res) => {
 
     res.json(result.rows[0]);
   } catch (err) {
-    console.error("Error updating cart:", err.message);
     res.status(500).json({ error: "Failed to update cart item" });
   }
 });
 
-// ✅ Delete cart item
-router.delete("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    await pool.query("DELETE FROM cart WHERE id=$1", [id]);
-    res.json({ message: "Cart item removed" });
-  } catch (err) {
-    console.error("Error deleting cart item:", err.message);
-    res.status(500).json({ error: "Failed to delete cart item" });
-  }
-});
-
-// ✅ Clear entire cart
+// ✅ Clear entire cart (must be defined before :id route)
 router.delete("/clear", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
@@ -131,16 +114,14 @@ router.delete("/clear", async (req, res) => {
     const userId = decoded.id;
 
     await pool.query("DELETE FROM cart WHERE user_id = $1", [userId]);
-
     res.json({ message: "Cart emptied successfully" });
   } catch (err) {
-    console.error("Error clearing cart:", err.message);
     res.status(500).json({ error: "Failed to clear cart" });
   }
 });
 
-// ✅ Delete single cart item by ID
-router.delete("/:id", async (req, res) => {
+// ✅ Delete single cart item by numeric ID
+router.delete("/:id(\\d+)", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader)
@@ -158,10 +139,8 @@ router.delete("/:id", async (req, res) => {
 
     res.json({ message: "Cart item deleted successfully" });
   } catch (err) {
-    console.error("Error deleting cart item:", err.message);
     res.status(500).json({ error: "Failed to delete cart item" });
   }
 });
-
 
 module.exports = router;

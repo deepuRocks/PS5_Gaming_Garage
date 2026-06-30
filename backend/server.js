@@ -8,7 +8,6 @@ const profileRoutes = require("./routes/profile");
 const serviceRoutes = require("./routes/services"); // ✅ single import
 const orderRoutes = require("./routes/orders");
 const cartRoutes = require("./routes/cart");
-
 const app = express();
 const PORT = process.env.PORT || 5000;
 

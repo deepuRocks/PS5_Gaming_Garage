@@ -1,66 +1,77 @@
 /* Checkout container */
 .checkout-container {
   padding: 20px;
-  font-family: "Segoe UI", sans-serif; /* ✅ consistent font */
-  min-height: 100vh;                   /* ✅ full height */
-  overflow-y: auto;                    /* ✅ allow vertical scroll */
-  margin-bottom: 80px;                 /* ✅ space before footer */
-  background: #e4dfd1;                 /* ✅ same background as dashboard */
-  border-radius: 8px;                  /* ✅ rounded corners */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);/* ✅ subtle shadow */
-  margin-left: 20px;                   /* ✅ respect sidebar */
-  margin-top: 60px;                    /* ✅ respect header */
-  max-width: 600px;                    /* ✅ balanced width */
+  font-family: "Segoe UI", sans-serif;
+  min-height: 100vh;
+  overflow-y: auto;
+  margin-bottom: 80px;
+  background: #e4dfd1;        /* biscuit background */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-left: 20px;          /* respect sidebar */
+  margin-top: 60px;           /* respect header */
+  max-width: 600px;
 }
 
-/* Checkout heading */
+/* Heading */
 .checkout-container h1 {
   margin-bottom: 20px;
-  color: #0a1628;                      /* ✅ dark navy */
+  color: #0a1628;             /* dark navy */
+  font-size: 1.6rem;
+  font-weight: 700;
 }
 
-/* Checkout form layout */
+/* Form layout */
 .checkout-form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 .checkout-form label {
-  display: block;          /* ✅ forces label on its own line */
-  margin-bottom: 6px;      /* ✅ spacing between label and input */
   font-weight: 600;
   color: #0a1628;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Inputs, textarea, select */
 .checkout-form input,
-.checkout-form textarea {
-  width: 100%;             /* ✅ full width */
+.checkout-form textarea,
+.checkout-form select {
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #bbb;
   border-radius: 6px;
   font-size: 0.95rem;
-  margin-bottom: 15px;     /* ✅ spacing between fields */
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .checkout-form input:focus,
-.checkout-form textarea:focus {
+.checkout-form textarea:focus,
+.checkout-form select:focus {
   outline: none;
-  border-color: #007bff;               /* ✅ blue focus */
+  border-color: #007bff;
   box-shadow: 0 0 5px rgba(0,123,255,0.4);
 }
+
 .checkout-form textarea {
-  min-height: 80px;        /* ✅ bigger text area for address */
-  resize: vertical;        /* ✅ allow user to expand if needed */
-  width: auto;
+  min-height: 70px;
+  resize: vertical;
+}
+
+/* Dropdown styling */
+.checkout-form select {
+  background-color: #fff;
+  cursor: pointer;
 }
 
 /* Place Order button */
 .btn-place-order {
   margin-top: 20px;
   padding: 12px;
-  background: #e63946;                 /* ✅ red primary action */
+  background: #e63946;        /* red action */
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -72,11 +83,16 @@
 }
 
 .btn-place-order:hover {
-  background: #d41626;                 /* ✅ darker red hover */
+  background: #d41626;
   transform: translateY(-1px);
 }
 
 .btn-place-order:active {
-  background: #b3121f;                 /* ✅ pressed state */
+  background: #b3121f;
   transform: translateY(0);
+}
+
+.required {
+  color: red;
+  margin-left: 2px;
 }

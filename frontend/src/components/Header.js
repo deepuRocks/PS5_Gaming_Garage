@@ -83,7 +83,7 @@ export default function Header({ onSearch }) {
         </div>
       </div>
       <nav className="nav">
-        {username && <span className="welcome">Hello {username}</span>}
+        {username && <span className="welcome">Hello, {username}</span>}
         <a href="/cart">
           <FaShoppingCart /> Cart ({cartCount})
         </a>

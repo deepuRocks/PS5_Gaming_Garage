@@ -6,7 +6,7 @@ import "./MyOrders.css";
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cancelOrderId, setCancelOrderId] = useState(null);
+  const [cancelItemId, setCancelItemId] = useState(null);
   const [cancelReason, setCancelReason] = useState("");
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ export default function MyOrders() {
     "Other",
   ];
 
-  useEffect(() => {
+  const fetchOrders = () => {
     const token = localStorage.getItem("token");
     axios
       .get("http://localhost:5000/api/orders", {
@@ -31,9 +31,13 @@ export default function MyOrders() {
         console.error("Error fetching orders:", err);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchOrders();
   }, []);
 
-  const handleCancelOrder = (orderId) => {
+  const handleCancelItem = (itemId) => {
     if (!cancelReason) {
       alert("Please select a reason before cancelling.");
       return;
@@ -41,17 +45,17 @@ export default function MyOrders() {
     const token = localStorage.getItem("token");
     axios
       .put(
-        `http://localhost:5000/api/orders/${orderId}/cancel`,
+        `http://localhost:5000/api/orders/items/${itemId}/cancel`,
         { reason: cancelReason },
-        { headers: { Authorization: `Bearer ${token}` } },
+        { headers: { Authorization: `Bearer ${token}` } }
       )
       .then(() => {
-        alert("Order cancelled successfully.");
-        setOrders(orders.filter((o) => o.order_id !== orderId));
-        setCancelOrderId(null);
+        alert("Item cancelled successfully.");
+        fetchOrders(); // refresh list
+        setCancelItemId(null);
         setCancelReason("");
       })
-      .catch((err) => console.error("Error cancelling order:", err));
+      .catch((err) => console.error("Error cancelling item:", err));
   };
 
   if (loading) return <h2>Loading your orders...</h2>;
@@ -69,8 +73,8 @@ export default function MyOrders() {
             <th>Service</th>
             <th>Image</th>
             <th>Status</th>
-            <th>Quantity</th>   {/* ✅ new column */}
-            <th>Price</th>      {/* ✅ new column */}
+            <th>Quantity</th>
+            <th>Price</th>
             <th>Total</th>
             <th>Date</th>
             <th>Actions</th>
@@ -78,7 +82,7 @@ export default function MyOrders() {
         </thead>
         <tbody>
           {orders.map((order) => (
-            <tr key={order.order_id}>
+            <tr key={order.item_id}>
               <td>{order.order_id}</td>
               <td>{order.service_name}</td>
               <td>
@@ -88,9 +92,9 @@ export default function MyOrders() {
                   className="order-image"
                 />
               </td>
-              <td>{order.status}</td>
-              <td>{order.quantity}</td>       {/* ✅ show quantity */}
-              <td>₹{order.price}</td>         {/* ✅ show price */}
+              <td>{order.item_status}</td>
+              <td>{order.quantity}</td>
+              <td>₹{order.price}</td>
               <td>₹{order.total}</td>
               <td>{new Date(order.created_at).toLocaleDateString()}</td>
               <td>
@@ -100,13 +104,13 @@ export default function MyOrders() {
                 >
                   View Service
                 </button>
-                {cancelOrderId === order.order_id ? (
+                {cancelItemId === order.item_id ? (
                   <div className="cancel-reasons">
                     {cancelReasons.map((r) => (
                       <label key={r}>
                         <input
                           type="radio"
-                          name={`cancel-${order.order_id}`}
+                          name={`cancel-${order.item_id}`}
                           value={r}
                           onChange={() => setCancelReason(r)}
                         />
@@ -114,7 +118,7 @@ export default function MyOrders() {
                       </label>
                     ))}
                     <button
-                      onClick={() => handleCancelOrder(order.order_id)}
+                      onClick={() => handleCancelItem(order.item_id)}
                       className="btn-confirm-cancel"
                     >
                       Confirm Cancel
@@ -122,10 +126,10 @@ export default function MyOrders() {
                   </div>
                 ) : (
                   <button
-                    onClick={() => setCancelOrderId(order.order_id)}
+                    onClick={() => setCancelItemId(order.item_id)}
                     className="btn-cancel-order"
                   >
-                    Cancel Order
+                    Cancel Item
                   </button>
                 )}
               </td>
