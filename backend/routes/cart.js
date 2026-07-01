@@ -7,18 +7,14 @@ const jwt = require("jsonwebtoken");
 router.post("/", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader)
-      return res.status(401).json({ message: "No token provided" });
+    if (!authHeader) return res.status(401).json({ message: "No token provided" });
 
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const { service_id, option_name, quantity } = req.body;
-
     if (!service_id || !option_name) {
-      return res
-        .status(400)
-        .json({ error: "service_id and option_name are required" });
+      return res.status(400).json({ error: "service_id and option_name are required" });
     }
 
     const optionCheck = await pool.query(
@@ -53,6 +49,7 @@ router.post("/", async (req, res) => {
 
     res.json(result.rows[0]);
   } catch (err) {
+    console.error("Error adding to cart:", err);
     res.status(500).json({ error: "Failed to add to cart" });
   }
 });
@@ -61,8 +58,7 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader)
-      return res.status(401).json({ message: "No token provided" });
+    if (!authHeader) return res.status(401).json({ message: "No token provided" });
 
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -81,64 +77,62 @@ router.get("/", async (req, res) => {
 
     res.json(result.rows);
   } catch (err) {
+    console.error("Error fetching cart:", err);
     res.status(500).json({ error: "Failed to fetch cart" });
   }
 });
 
 // ✅ Update quantity
-router.put("/:id(\\d+)", async (req, res) => {
+router.put("/:id", async (req, res) => {
+  const id = req.params.id;
+  if (!/^\d+$/.test(id)) {
+    return res.status(400).json({ error: "Invalid ID format" });
+  }
   try {
-    const { id } = req.params;
     const { quantity } = req.body;
-
     const result = await pool.query(
       "UPDATE cart SET quantity=$1, updated_at=NOW() WHERE id=$2 RETURNING *",
       [quantity, id]
     );
-
     res.json(result.rows[0]);
   } catch (err) {
+    console.error("Error updating cart item:", err);
     res.status(500).json({ error: "Failed to update cart item" });
   }
 });
 
-// ✅ Clear entire cart (must be defined before :id route)
+// ✅ Clear entire cart
 router.delete("/clear", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader)
-      return res.status(401).json({ message: "No token provided" });
+    if (!authHeader) return res.status(401).json({ message: "No token provided" });
 
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
 
-    await pool.query("DELETE FROM cart WHERE user_id = $1", [userId]);
+    await pool.query("DELETE FROM cart WHERE user_id = $1", [decoded.id]);
     res.json({ message: "Cart emptied successfully" });
   } catch (err) {
+    console.error("Error clearing cart:", err);
     res.status(500).json({ error: "Failed to clear cart" });
   }
 });
 
-// ✅ Delete single cart item by numeric ID
-router.delete("/:id(\\d+)", async (req, res) => {
+// ✅ Delete single cart item
+router.delete("/:id", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
-    if (!authHeader)
-      return res.status(401).json({ message: "No token provided" });
+    if (!authHeader) return res.status(401).json({ message: "No token provided" });
 
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
 
     const { id } = req.params;
-    await pool.query("DELETE FROM cart WHERE id = $1 AND user_id = $2", [
-      id,
-      userId,
-    ]);
+    await pool.query("DELETE FROM cart WHERE id = $1 AND user_id = $2", [id, decoded.id]);
 
     res.json({ message: "Cart item deleted successfully" });
   } catch (err) {
+    console.error("Error deleting cart item:", err);
     res.status(500).json({ error: "Failed to delete cart item" });
   }
 });

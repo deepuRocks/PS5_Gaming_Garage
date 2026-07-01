@@ -25,51 +25,64 @@
 .checkout-form {
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
-.checkout-form label {
+/* Each field wrapper */
+.form-group {
+  display: flex;
+  flex-direction: column;     /* label above input */
+  margin-bottom: 18px;
+}
+
+/* Labels */
+.form-group label {
   font-weight: 600;
   color: #0a1628;
-  margin-bottom: 4px;
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 6px;
+  font-size: 0.95rem;
 }
 
-/* Inputs, textarea, select */
-.checkout-form input,
-.checkout-form textarea,
-.checkout-form select {
+/* Red asterisk */
+.required {
+  color: red;
+  margin-left: 4px;
+}
+
+/* Inputs, select, textarea */
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 10px;
   border: 1px solid #bbb;
   border-radius: 6px;
   font-size: 0.95rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  background-color: #fff;
 }
 
-.checkout-form input:focus,
-.checkout-form textarea:focus,
-.checkout-form select:focus {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
   outline: none;
   border-color: #007bff;
   box-shadow: 0 0 5px rgba(0,123,255,0.4);
 }
 
-.checkout-form textarea {
-  min-height: 70px;
+/* Textarea */
+.form-group textarea {
+  min-height: 80px;
   resize: vertical;
 }
 
 /* Dropdown styling */
-.checkout-form select {
-  background-color: #fff;
+.form-group select {
   cursor: pointer;
 }
 
 /* Place Order button */
 .btn-place-order {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 12px;
   background: #e63946;        /* red action */
   color: #fff;
@@ -90,9 +103,4 @@
 .btn-place-order:active {
   background: #b3121f;
   transform: translateY(0);
-}
-
-.required {
-  color: red;
-  margin-left: 2px;
 }

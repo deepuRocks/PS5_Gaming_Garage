@@ -1,6 +1,14 @@
 import React from "react";
 import "./Sidebar.css";
-import { FaHome, FaBox, FaUser, FaEnvelope, FaInfoCircle } from "react-icons/fa";
+import {
+  FaHome,
+  FaBox,
+  FaUser,
+  FaEnvelope,
+  FaInfoCircle,
+  FaStarHalfAlt,
+  FaQuestionCircle, 
+} from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Sidebar() {
@@ -38,20 +46,36 @@ export default function Sidebar() {
             <FaUser /> Profile
           </div>
         </li>
-                <li>
+        <li>
           <div
-            onClick={() => handleNav("/About US")}
-            className={location.pathname === "/" ? "active" : ""}
+            onClick={() => handleNav("/about")}
+            className={location.pathname === "/about" ? "active" : ""}
           >
             <FaInfoCircle /> About US
           </div>
         </li>
-                <li>
+        <li>
           <div
-            onClick={() => handleNav("/Contact US")}
-            className={location.pathname === "/" ? "active" : ""}
+            onClick={() => handleNav("/contact")}
+            className={location.pathname === "/contact" ? "active" : ""}
           >
             <FaEnvelope /> Contact US
+          </div>
+        </li>
+                <li>
+          <div
+            onClick={() => handleNav("/reviews")}
+            className={location.pathname === "/reviews" ? "active" : ""}
+          >
+            <FaStarHalfAlt  /> Reviews
+          </div>
+        </li>
+                <li>
+          <div
+            onClick={() => handleNav("/faq")}
+            className={location.pathname === "/faq" ? "active" : ""}
+          >
+            <FaQuestionCircle /> FAQ's
           </div>
         </li>
       </ul>

@@ -11,6 +11,7 @@
   min-height: 250px;       /* ✅ full height */
   overflow-y: auto;        /* ✅ scroll if needed */
   margin-bottom: 80px;     /* ✅ space before footer */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* Profile form layout */

@@ -54,7 +54,7 @@ body, html {
 
 .tabs button {
   margin: 0 5px;
-  background: #007bff;
+  background: #444;          /* Neutral inactive */
   color: white;
   border: none;
   padding: 6px 12px;
@@ -63,8 +63,20 @@ body, html {
   transition: background 0.2s ease;
 }
 
+.tabs button.active {
+  background: #28a745 !important;  /* light green */
+  color: #fff;
+}
+
+.tabs button:hover {
+  background: #555;          /* Hover feedback */
+}
+
 .tabs .active {
-  background: #28a745;
+  background: #007bff;       /* Bright highlight */
+  color: #fff;
+  font-weight: bold;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.6);
 }
 
 /* Inputs */
@@ -148,4 +160,23 @@ button[type="submit"]:hover {
 
 .back-link:hover {
   text-decoration: underline;
+}
+
+
+.google-login {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.google-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  margin-right: 8px;
+  vertical-align: middle;
 }

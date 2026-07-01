@@ -1,3 +1,4 @@
+const { sendMail } = require("../utils/mailer");
 const express = require("express");
 const router = express.Router();
 const pool = require("../database/db");
@@ -15,11 +16,13 @@ router.post("/", async (req, res) => {
     const userId = decoded.id;
 
     // ✅ Accept new fields
-    const { name, phone, address1, address2, landmark, pincode, state } = req.body;
+    const { name, phone, address1, address2, landmark, pincode, state } =
+      req.body;
     if (!name || !phone || !address1 || !landmark || !pincode || !state) {
-      return res
-        .status(400)
-        .json({ error: "Name, phone, address1, landmark, pincode, and state are required" });
+      return res.status(400).json({
+        error:
+          "Name, phone, address1, landmark, pincode, and state are required",
+      });
     }
 
     // ✅ Fetch cart items with option-level pricing
@@ -52,7 +55,17 @@ router.post("/", async (req, res) => {
        )
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'Pending',NOW())
        RETURNING id`,
-      [userId, name, phone, address1, address2, landmark, pincode, state, total],
+      [
+        userId,
+        name,
+        phone,
+        address1,
+        address2,
+        landmark,
+        pincode,
+        state,
+        total,
+      ],
     );
     const orderId = orderResult.rows[0].id;
 
@@ -68,7 +81,46 @@ router.post("/", async (req, res) => {
     // ✅ Clear cart
     await pool.query("DELETE FROM cart WHERE user_id = $1", [userId]);
 
+    // ✅ Respond immediately (no waiting for Gmail)
     res.json({ message: "Order placed successfully", orderId });
+
+    // 🔄 Send emails in background
+    setImmediate(async () => {
+      try {
+        // Admin notification
+        await sendMail(
+          process.env.GMAIL_USER,
+          `New Order #${orderId}`,
+          `Order #${orderId}
+Name: ${name}
+Phone: ${phone}
+Address: ${address1}, ${address2}, Landmark: ${landmark}, ${state}, Pincode: ${pincode}
+Total: ₹${total}
+Status: Pending
+Date: ${new Date().toLocaleString()}`
+        );
+
+        // User notification
+        const userEmailResult = await pool.query(
+          "SELECT email FROM users WHERE id=$1",
+          [userId],
+        );
+        const userEmail = userEmailResult.rows[0]?.email;
+        if (userEmail) {
+          await sendMail(
+            userEmail,
+            `Order Confirmation #${orderId}`,
+            `Thank you for your order!
+Order #${orderId}
+Total: ₹${total}
+Status: Pending
+We’ll notify you when the status changes.`
+          );
+        }
+      } catch (err) {
+        console.error("Background email failed:", err.message);
+      }
+    });
   } catch (err) {
     console.error("Error creating order:", err.message);
     res.status(500).json({ error: "Failed to create order" });
@@ -172,7 +224,32 @@ router.put("/items/:itemId/cancel", async (req, res) => {
       [orderId],
     );
 
+    // ✅ Respond immediately
     res.json({ message: "Order item cancelled successfully" });
+
+    // 🔄 Send email in background
+    const userEmailResult = await pool.query(
+      "SELECT email FROM users WHERE id=(SELECT user_id FROM orders WHERE id=$1)",
+      [orderId],
+    );
+    const userEmail = userEmailResult.rows[0]?.email;
+
+    if (userEmail) {
+      setImmediate(async () => {
+        try {
+          await sendMail(
+            userEmail,
+            `Order #${orderId} Status Update`,
+            `Your order has been updated.
+Order #${orderId}
+Item: ${itemId}
+New Status: ${statusText}`
+          );
+        } catch (err) {
+          console.error("Background email failed:", err.message);
+        }
+      });
+    }
   } catch (err) {
     console.error("Error cancelling order item:", err.message);
     res.status(500).json({ error: "Failed to cancel order item" });

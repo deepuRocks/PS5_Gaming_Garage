@@ -96,20 +96,27 @@ export default function Checkout() {
     <div className="checkout-container">
       <h1>Checkout</h1>
       <form onSubmit={handleSubmit} className="checkout-form">
-        <label>
-          Name<span className="required">*</span>:
+
+        <div className="form-group">
+          <label htmlFor="name">
+            Name<span className="required">*</span>
+          </label>
           <input
+            id="name"
             type="text"
             name="name"
             required
             value={formData.name}
             onChange={handleChange}
           />
-        </label>
+        </div>
 
-        <label>
-          Phone<span className="required">*</span>:
+        <div className="form-group">
+          <label htmlFor="phone">
+            Phone<span className="required">*</span>
+          </label>
           <input
+            id="phone"
             type="tel"
             name="phone"
             required
@@ -119,11 +126,14 @@ export default function Checkout() {
             maxLength="10"
             placeholder="Enter 10-digit phone number"
           />
-        </label>
+        </div>
 
-        <label>
-          Address 1<span className="required">*</span>:
+        <div className="form-group">
+          <label htmlFor="address1">
+            Address 1<span className="required">*</span>
+          </label>
           <input
+            id="address1"
             type="text"
             name="address1"
             placeholder="Building name, floor, door number"
@@ -131,33 +141,40 @@ export default function Checkout() {
             value={formData.address1}
             onChange={handleChange}
           />
-        </label>
+        </div>
 
-        <label>
-          Address 2:
+        <div className="form-group">
+          <label htmlFor="address2">Address 2</label>
           <input
+            id="address2"
             type="text"
             name="address2"
             placeholder="Street name, area, city, state"
             value={formData.address2}
             onChange={handleChange}
           />
-        </label>
+        </div>
 
-        <label>
-          Landmark<span className="required">*</span>:
+        <div className="form-group">
+          <label htmlFor="landmark">
+            Landmark<span className="required">*</span>
+          </label>
           <input
+            id="landmark"
             type="text"
             name="landmark"
             required
             value={formData.landmark}
             onChange={handleChange}
           />
-        </label>
+        </div>
 
-        <label>
-          Pincode<span className="required">*</span>:
+        <div className="form-group">
+          <label htmlFor="pincode">
+            Pincode<span className="required">*</span>
+          </label>
           <input
+            id="pincode"
             type="text"
             name="pincode"
             required
@@ -167,11 +184,14 @@ export default function Checkout() {
             maxLength="6"
             placeholder="Enter 6-digit pincode"
           />
-        </label>
+        </div>
 
-        <label>
-          State<span className="required">*</span>:
+        <div className="form-group">
+          <label htmlFor="state">
+            State<span className="required">*</span>
+          </label>
           <select
+            id="state"
             name="state"
             required
             value={formData.state}
@@ -184,7 +204,7 @@ export default function Checkout() {
               </option>
             ))}
           </select>
-        </label>
+        </div>
 
         <button type="submit" className="btn-place-order">
           Place Order

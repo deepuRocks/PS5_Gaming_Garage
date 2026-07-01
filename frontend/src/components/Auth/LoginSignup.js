@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Auth.css";
 import bgImage from "../../assets/background.jpg";
+import { GoogleLogin } from "@react-oauth/google";
+import logo from "../../assets/logo.png";
 
 const LoginSignup = () => {
   const [tab, setTab] = useState("login");
@@ -92,8 +94,8 @@ const LoginSignup = () => {
         // ✅ Save JWT token in localStorage
         if (res.data.token) {
           localStorage.setItem("token", res.data.token);
-          localStorage.setItem("first_name", res.data.first_name); // ✅ save first name
-          localStorage.setItem("last_name", res.data.last_name); // ✅ save last name
+          localStorage.setItem("first_name", res.data.first_name);
+          localStorage.setItem("last_name", res.data.last_name);
         }
 
         // ✅ Redirect based on role
@@ -117,7 +119,10 @@ const LoginSignup = () => {
       <img src={bgImage} alt="Background" className="bg-image" />
 
       <div className="auth-form">
-        <h2>Gaming Garage</h2>
+        <h2>
+          <img src={logo} alt="Logo" className="logo-icon" />
+          Hyderabad Gaming Garage
+        </h2>
 
         <div className="tabs">
           <button
@@ -132,6 +137,38 @@ const LoginSignup = () => {
           >
             Sign Up
           </button>
+        </div>
+        {/* ✅ Google Login Button */}
+        <div className="google-login">
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              try {
+                const res = await axios.post(
+                  "http://localhost:5000/api/auth/google-login",
+                  {
+                    token: credentialResponse.credential,
+                  },
+                );
+
+                if (res.data.token) {
+                  localStorage.setItem("token", res.data.token);
+                  localStorage.setItem("first_name", res.data.first_name);
+                  localStorage.setItem("last_name", res.data.last_name);
+                }
+
+                if (res.data.role === "admin") {
+                  window.location.href = "/admin";
+                } else {
+                  window.location.href = "/dashboard";
+                }
+              } catch (err) {
+                alert("Google login failed");
+              }
+            }}
+            onError={() => {
+              alert("Google login failed");
+            }}
+          />
         </div>
 
         {tab === "login" ? (
