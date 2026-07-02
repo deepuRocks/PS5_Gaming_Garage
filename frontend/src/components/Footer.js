@@ -5,7 +5,8 @@ export default function Footer() {
   return (
     <footer className="footer">
       <p>© 2026 PS5 Gaming Garage. All rights reserved.</p>
-      <p>Contact: support@gaminggarage.com</p>
+      <p>Gmail: ps5gaminggarage@gmail.com</p>
     </footer>
   );
 }
+ 

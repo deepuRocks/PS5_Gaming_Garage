@@ -155,7 +155,6 @@ export default function ServiceDetail() {
 
       <div className="tabs">
         <button onClick={() => setActiveTab("details")}>Details</button>
-        <button onClick={() => setActiveTab("reviews")}>Reviews</button>
         <button onClick={() => setActiveTab("shipping")}>Shipping</button>
         <button onClick={() => setActiveTab("warranty")}>
           Repair Warranty
@@ -164,7 +163,6 @@ export default function ServiceDetail() {
 
       <div className="tab-content">
         {activeTab === "details" && <p>{service.description}</p>}
-        {activeTab === "reviews" && <p>⭐ Reviews will go here.</p>}
         {activeTab === "shipping" && <p>🚚 Free delivery across India.</p>}
         {activeTab === "warranty" && (
           <p>🛠 3-month repair warranty included.</p>
