@@ -1,13 +1,17 @@
 /* Card */
 .service-detail-container {
-  background: #e4dfd1;       /* ✅ white card */
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   padding: 20px;
-  margin-left: 80px;
-  margin-right: 80px;
-  margin-top: 60px;
-  font-family: "Segoe UI", sans-serif;
+  font-family: "Segoe UI", sans-serif; /* ✅ same font */
+  min-height: 100vh;                   /* ✅ full height */
+  min-width: 100vh; 
+  overflow-y: auto;                    /* ✅ allow vertical scroll */
+  margin-bottom: 80px;                 /* ✅ space before footer */
+  background: #e4dfd1;                 /* ✅ same background */
+  border-radius: 8px;                  /* ✅ same rounded corners */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);/* ✅ same shadow */
+  margin-left: 20px;                   /* ✅ align with dashboard spacing */
+  margin-right: 20px;
+  margin-top: 10px;                    /* ✅ respect header */
 }
 
 /* Image inside card */
@@ -86,3 +90,56 @@
   color: #333;
   line-height: 1.5;
 }
+
+.stick-options {
+  margin: 15px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stick-options label {
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.stick-options input[type="radio"] {
+  margin-right: 8px;
+  accent-color: #e63946; /* red highlight */
+}
+
+/* Action buttons (Add to Cart, Order Now) */
+.action-btn {
+  display: inline-block;
+  margin: 10px 8px 0 0;
+  padding: 10px 18px;
+  background: #e63946;        /* ✅ Bootstrap primary blue */
+  color: #fff;
+  border: none;
+  border-radius: 4px;         /* ✅ classic radius */
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* ✅ subtle shadow */
+}
+
+.action-btn:hover {
+  background: #d41626;        /* ✅ darker hover */
+  transform: translateY(-1px);/* ✅ slight lift */
+}
+
+.action-btn:active {
+  background: #e63946;        /* ✅ pressed state */
+  transform: translateY(0);
+}
+
+/* Secondary button style (optional, e.g. Cancel) */
+.action-btn-secondary {
+  background: #6c757d;        /* ✅ Bootstrap secondary gray */
+}
+
+.action-btn-secondary:hover {
+  background: #5a6268;
+}
+

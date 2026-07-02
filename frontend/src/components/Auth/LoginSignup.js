@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import "./Auth.css";
 import bgImage from "../../assets/background.jpg";
+import { GoogleLogin } from "@react-oauth/google";
+import logo from "../../assets/logo.png";
 
 const LoginSignup = () => {
   const [tab, setTab] = useState("login");
@@ -30,7 +32,9 @@ const LoginSignup = () => {
       }
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&.]{8,}$/;
       if (!passwordRegex.test(password)) {
-        alert("Password must be at least 8 characters, alphanumeric, and may include special characters");
+        alert(
+          "Password must be at least 8 characters, alphanumeric, and may include special characters",
+        );
         return;
       }
       if (password !== rePassword) {
@@ -53,15 +57,18 @@ const LoginSignup = () => {
 
       // ✅ Call backend signup API
       try {
-        const res = await axios.post("http://localhost:5000/api/auth/signup", {
-          firstName,
-          lastName,
-          email,
-          password,
-          phoneNumber,
-          countryCode,
-          gender,
-        });
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/auth/signup`,
+          {
+            firstName,
+            lastName,
+            email,
+            password,
+            phoneNumber,
+            countryCode,
+            gender,
+          },
+        );
         alert(res.data.message);
         setTab("login"); // ✅ redirect user to login form
       } catch (err) {
@@ -82,14 +89,19 @@ const LoginSignup = () => {
 
       // ✅ Call backend login API
       try {
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
-          email,
-          password,
-        });
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/auth/login`,
+          {
+            email,
+            password,
+          },
+        );
 
         // ✅ Save JWT token in localStorage
         if (res.data.token) {
           localStorage.setItem("token", res.data.token);
+          localStorage.setItem("first_name", res.data.first_name);
+          localStorage.setItem("last_name", res.data.last_name);
         }
 
         // ✅ Redirect based on role
@@ -113,7 +125,10 @@ const LoginSignup = () => {
       <img src={bgImage} alt="Background" className="bg-image" />
 
       <div className="auth-form">
-        <h2>Gaming Garage</h2>
+        <div className="logo-heading">
+          <img src={logo} alt="Logo" className="logo-icon" />
+          <span className="logo-text">Hyderabad Gaming Garage</span>
+        </div>
 
         <div className="tabs">
           <button
@@ -130,11 +145,44 @@ const LoginSignup = () => {
           </button>
         </div>
 
+
         {tab === "login" ? (
           <form onSubmit={handleSubmit}>
             <input type="email" placeholder="Email" />
             <input type="password" placeholder="Password" />
             <button type="submit">Login</button>
+                              {/* ✅ Google Login Button */}
+        <div className="google-login">
+          <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              try {
+                const res = await axios.post(
+                  `${process.env.REACT_APP_API_URL}/api/auth/google-login`,
+                  {
+                    token: credentialResponse.credential,
+                  },
+                );
+
+                if (res.data.token) {
+                  localStorage.setItem("token", res.data.token);
+                  localStorage.setItem("first_name", res.data.first_name);
+                  localStorage.setItem("last_name", res.data.last_name);
+                }
+
+                if (res.data.role === "admin") {
+                  window.location.href = "/admin";
+                } else {
+                  window.location.href = "/dashboard";
+                }
+              } catch (err) {
+                alert("Google login failed");
+              }
+            }}
+            onError={() => {
+              alert("Google login failed");
+            }}
+          />
+        </div>
             <div className="forgot">
               <button
                 type="button"

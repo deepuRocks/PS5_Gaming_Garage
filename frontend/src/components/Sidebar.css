@@ -13,31 +13,33 @@
   font-family: "Segoe UI", sans-serif;
 }
 
+
 /* Sidebar links */
-.sidebar a {
+.sidebar div {
   display: flex;
   align-items: center;
-  gap: 10px;                    /* ✅ space between icon and text */
+  gap: 10px;
   padding: 12px 20px;
-  color: #fff;                  /* ✅ white text for inactive */
-  text-decoration: none;
+  color: #fff;
   font-size: 15px;
   font-weight: 500;
+  cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.sidebar a:hover {
-  background: #1a253b;          /* ✅ lighter navy hover */
+.sidebar div:hover {
+  background: #1a253b;          /* lighter navy hover */
   border-radius: 4px;
   color: #fff;
 }
 
-.sidebar a.active {
-  background: #e63946;          /* ✅ red active highlight */
+.sidebar div.active {
+  background: #e63946;          /* red active highlight */
   color: #fff;
   font-weight: bold;
   border-radius: 4px;
 }
+
 
 /* Sidebar list */
 .sidebar ul {

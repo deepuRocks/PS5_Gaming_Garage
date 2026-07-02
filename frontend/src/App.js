@@ -1,12 +1,23 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import LoginSignup from "./components/Auth/LoginSignup";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import ForgotPassword from "./components/Auth/ForgotPassword";
+import LoginSignup from "./components/Auth/LoginSignup";
 import ResetPassword from "./components/Auth/ResetPassword";
 import AdminPage from "./components/AdminPage";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
 import Dashboard from "./components/Dashboard";
-import ServiceDetail from "./components/ServiceDetail";
 import Layout from "./components/Layout";
+import MyOrders from "./components/MyOrders";
 import Profile from "./components/Profile";
+import ServiceDetail from "./components/ServiceDetail";
+import AboutUs from "./pages/AboutUs";
+import Reviews from "./pages/Reviews";
+import ContactUs from "./pages/ContactUs";
 
 // ✅ ProtectedRoute for normal users
 function ProtectedRoute({ children }) {
@@ -54,21 +65,17 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            
-              <Layout>
-                <Dashboard />
-              </Layout>
-            
+            <Layout>
+              <Dashboard />
+            </Layout>
           }
         />
         <Route
           path="/service/:id"
           element={
-            
-              <Layout>
-                <ServiceDetail />
-              </Layout>
-            
+            <Layout>
+              <ServiceDetail />
+            </Layout>
           }
         />
         <Route
@@ -79,6 +86,58 @@ function App() {
                 <Profile />
               </Layout>
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <Layout>
+              <MyOrders />
+            </Layout>
+          }
+        />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Cart />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <Checkout />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <Layout>
+              <AboutUs />
+            </Layout>
+          }
+        />
+                <Route
+          path="/reviews"
+          element={
+            <Layout>
+              <Reviews />
+            </Layout>
+          }
+        />
+                      <Route
+          path="/contact"
+          element={
+            <Layout>
+              <ContactUs />
+            </Layout>
           }
         />
       </Routes>

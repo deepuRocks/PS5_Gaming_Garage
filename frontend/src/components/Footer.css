@@ -1,17 +1,64 @@
 .footer {
   background: #0a1628;        /* ✅ dark navy background */
   color: #ddd;
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;            /* ✅ responsive on smaller screens */
-  padding: 30px 20px;
+  padding: 40px 20px;
   border-top: 1px solid #222;
+  margin-left: 200px;         /* ✅ offset matches sidebar width */
+  width: calc(100% - 200px);  /* ✅ fills remaining space */
 }
 
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;            /* ✅ responsive on smaller screens */
+  gap: 40px;
+}
+
+/* ✅ About section */
+.footer-about {
+  flex: 1;
+  min-width: 250px;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+
+}
+
+.footer-logo-img {
+  height: 40px;               /* ✅ adjust logo size */
+  width: auto;
+}
+
+.footer-about p {
+  margin: 15px 0;
+  line-height: 1.6;
+}
+
+.footer-icons {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 22px;
+}
+
+.footer-icons a {
+  color: #fff;
+  transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.footer-icons a:hover {
+  transform: scale(1.1);
+  color: #00aaff;
+}
+
+/* ✅ Useful Links */
 .footer-col {
   flex: 1;
   min-width: 180px;
   margin: 10px;
+  padding-left: 10%;
 }
 
 .footer-col h4 {
@@ -23,31 +70,54 @@
   font-size: 16px;
 }
 
-.footer-col p,
-.footer-col a {
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col li {
   margin: 6px 0;
+}
+
+.footer-col a {
   color: #ddd;
   text-decoration: none;
   font-size: 14px;
+  transition: color 0.3s ease;
 }
 
 .footer-col a:hover {
   color: #fff;                /* ✅ brighter hover */
 }
 
-.footer-icons {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
+/* ✅ Extra positive paragraph */
+.footer-extra {
+  flex: 2;
+  min-width: 250px;
 }
 
-.footer-icons img {
-  height: 24px;
-  width: 24px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
+.footer-extra h4 {
+  color: #fff;
+  margin-bottom: 12px;
+  border-bottom: 2px solid #e53935;
+  display: inline-block;
+  padding-bottom: 5px;
+  font-size: 16px;
 }
 
-.footer-icons img:hover {
-  transform: scale(1.1);      /* ✅ subtle hover zoom */
+.footer-extra p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #ddd;
+  text-align: justify;
+}
+
+/* ✅ Bottom bar */
+.footer-bottom {
+  margin-top: 30px;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #aaa;
 }

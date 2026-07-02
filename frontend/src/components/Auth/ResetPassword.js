@@ -47,14 +47,20 @@ const ResetPassword = () => {
   };
 
   return (
-    <div
-      className="auth-container"
-      style={{
-        backgroundImage: `url(${bgImage})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="auth-container">
+      <img
+        src={bgImage}
+        alt="background"
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "fit", // ✅ works here
+          zIndex: -1,
+        }}
+      />
       <div className="auth-form">
         <h2>Set New Password</h2>
         <form onSubmit={handleSubmit}>

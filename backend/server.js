@@ -1,14 +1,13 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
 // Import routes
 const authRoutes = require("./routes/auth");
 const profileRoutes = require("./routes/profile");
 const serviceRoutes = require("./routes/services"); // ✅ single import
 const orderRoutes = require("./routes/orders");
 const cartRoutes = require("./routes/cart");
-
+const feedbackRoutes = require("./routes/feedback");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -27,7 +26,7 @@ app.use("/api/profile", profileRoutes);
 app.use("/api/services", serviceRoutes); // ✅ matches import
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
-
+app.use("/api/feedback", feedbackRoutes);
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

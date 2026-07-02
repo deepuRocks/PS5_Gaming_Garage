@@ -1,0 +1,52 @@
+.cart-container {
+  max-width: 1000px;        /* ✅ wider table */
+  margin: 30px 0 30px 10px; /* ✅ 10px space from left sidebar */
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  text-align: left;         /* ✅ align content left */
+}
+
+.cart-container h1 {
+  margin-bottom: 20px;
+  text-align: center;       /* ✅ heading centered */
+}
+
+.cart-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;          /* ✅ larger text */
+}
+
+.cart-container th,
+.cart-container td {
+  padding: 14px;            /* ✅ bigger cell padding */
+  text-align: left;         /* ✅ align table cells left */
+  border-bottom: 1px solid #ddd;
+}
+
+.cart-container th {
+  background-color: #f4f4f4;
+}
+
+.cart-container button {
+  margin: 0 5px;
+  padding: 10px 20px;       /* ✅ bigger buttons */
+  border: none;
+  background-color: #e63946;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 15px;          /* ✅ larger text */
+}
+
+.cart-container button:hover {
+  background-color: #d41626;
+}
+
+.cart-container h2 {
+  margin-top: 20px;
+  text-align: right;
+  font-size: 18px;
+  font-weight: bold;
+}
