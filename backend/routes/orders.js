@@ -182,7 +182,6 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch orders" });
   }
 });
-
 // ✅ Cancel a single order item
 router.put("/items/:itemId/cancel", async (req, res) => {
   try {
@@ -227,16 +226,17 @@ router.put("/items/:itemId/cancel", async (req, res) => {
     // ✅ Respond immediately
     res.json({ message: "Order item cancelled successfully" });
 
-    // 🔄 Send email in background
-    const userEmailResult = await pool.query(
-      "SELECT email FROM users WHERE id=(SELECT user_id FROM orders WHERE id=$1)",
-      [orderId],
-    );
-    const userEmail = userEmailResult.rows[0]?.email;
+    // 🔄 Send emails in background
+    setImmediate(async () => {
+      try {
+        // User email
+        const userEmailResult = await pool.query(
+          "SELECT email FROM users WHERE id=(SELECT user_id FROM orders WHERE id=$1)",
+          [orderId],
+        );
+        const userEmail = userEmailResult.rows[0]?.email;
 
-    if (userEmail) {
-      setImmediate(async () => {
-        try {
+        if (userEmail) {
           await sendMail(
             userEmail,
             `Order #${orderId} Status Update`,
@@ -245,15 +245,27 @@ Order #${orderId}
 Item: ${itemId}
 New Status: ${statusText}`
           );
-        } catch (err) {
-          console.error("Background email failed:", err.message);
         }
-      });
-    }
+
+        // ✅ Admin email notification
+        await sendMail(
+          process.env.GMAIL_USER,
+          `Order #${orderId} Cancelled`,
+          `Order #${orderId}
+Item ID: ${itemId}
+Status: ${statusText}
+Reason: ${reason}
+Date: ${new Date().toLocaleString()}`
+        );
+      } catch (err) {
+        console.error("Background email failed:", err.message);
+      }
+    });
   } catch (err) {
     console.error("Error cancelling order item:", err.message);
     res.status(500).json({ error: "Failed to cancel order item" });
   }
 });
+
 
 module.exports = router;

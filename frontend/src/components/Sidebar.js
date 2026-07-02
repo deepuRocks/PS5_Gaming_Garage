@@ -6,8 +6,7 @@ import {
   FaUser,
   FaEnvelope,
   FaInfoCircle,
-  FaStarHalfAlt,
-  FaQuestionCircle, 
+  FaStarHalfAlt, 
 } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -68,14 +67,6 @@ export default function Sidebar() {
             className={location.pathname === "/reviews" ? "active" : ""}
           >
             <FaStarHalfAlt  /> Reviews
-          </div>
-        </li>
-                <li>
-          <div
-            onClick={() => handleNav("/faq")}
-            className={location.pathname === "/faq" ? "active" : ""}
-          >
-            <FaQuestionCircle /> FAQ's
           </div>
         </li>
       </ul>

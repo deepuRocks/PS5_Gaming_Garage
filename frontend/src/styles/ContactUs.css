@@ -1,0 +1,256 @@
+* {
+  box-sizing: border-box;
+}
+
+/* ✅ Full page layout — sidebar offset */
+.contact-page {
+  display: flex;
+  flex-direction: column;
+  margin-left: 240px;    /* sidebar width */
+  width: calc(100% - 240px);
+  font-family: "Segoe UI", Arial, sans-serif;
+  min-height: 100vh;
+  background: #ffffff;   /* ✅ clean white background */
+}
+
+/* ✅ Wrapper for card — has padding */
+.contact-wrapper {
+  padding: 40px;
+  padding-bottom: 0;     /* ✅ no gap between card and map */
+}
+
+/* ✅ Card container */
+.contact-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 100%;
+  background: #111;      /* ✅ dark theme */
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  overflow: hidden;
+  color: #f1f1f1;
+}
+
+.hero-image,
+.hero-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 100%;          /* ✅ keeps aspect ratio, trims extra space */
+  object-fit: cover;
+  display: block;
+  border-right: 2px solid #4285f4;
+}
+
+.hero-info {
+  padding: 40px;
+  background: linear-gradient(135deg, #1a1a1a, #222);
+  overflow: hidden;
+}
+
+.hero-info h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #00aaff;
+  margin-bottom: 16px;
+  text-shadow: 0 0 8px rgba(0,170,255,0.6);
+}
+
+.hero-info h2 {
+  font-size: 20px;
+  margin-top: 20px;
+  margin-bottom: 4px;    /* ✅ tighter spacing */
+  color: #ff4c4c;
+  line-height: 1.2;      /* ✅ keeps underline closer to text */
+}
+
+.hero-info p {
+  font-size: 20px;
+  margin: 8px 0;
+  color: #ddd;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.info-block {
+  margin-bottom: 20px;
+}
+
+/* ✅ Map section */
+.map-section {
+  width: 100%;
+  margin-top: 50px;      /* ✅ clean gap below card */
+  margin-bottom: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.map-section iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+  display: block;
+  border-radius: 14px;   /* ✅ consistent rounded corners */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* ✅ Responsive */
+@media (max-width: 768px) {
+  .contact-page {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .contact-wrapper {
+    padding: 20px;
+    padding-bottom: 0;
+  }
+
+  .contact-container {
+    flex-direction: column;
+  }
+
+  .hero-image,
+  .hero-info {
+    min-width: 100%;
+  }
+
+  .hero-image img {
+    border-right: none;
+    border-bottom: 2px solid #4285f4;
+    height: 250px;
+  }
+
+  .map-section {
+    margin-top: 20px;
+  }
+
+  .map-section iframe {
+    height: 300px;
+  }
+}
+
+
+/* Feedback form — matches hero-info background */
+.feedback-form {
+  max-width: 700px;
+  min-height: 400px;
+  margin: 40px auto;                
+  background: linear-gradient(135deg, #1a1a1a, #222); /* ✅ same gradient as hero-info */
+  padding: 20px;
+  border-radius: 14px;              
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  color: #f1f1f1;                   
+  text-align: left;
+}
+
+.feedback-form h2 {
+  color: #00aaff;                   /* ✅ consistent accent */
+  margin-bottom: 20px;
+}
+
+.feedback-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.feedback-form input,
+.feedback-form textarea {
+  margin-bottom: 15px;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #ffffff;              
+  color: #111;
+}
+
+.feedback-form textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+.feedback-form button {
+  padding: 12px;
+  background: #00aaff;              
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.feedback-form button:hover {
+  background: #0088cc;              
+}
+
+
+/* ✅ Social buttons under hero-info */
+.social-buttons {
+  margin-top: 30px;
+  display: flex;
+  gap: 15px;
+}
+
+.social-btn {
+  flex: 1;
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;               /* space between icon and text */
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.social-btn:hover {
+  transform: scale(1.05); /* subtle hover effect */
+}
+
+/* Instagram button */
+.instagram-btn {
+  background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
+}
+
+.instagram-btn:hover {
+  background: linear-gradient(45deg, #dd2a7b, #8134af, #515bd4, #f58529);
+}
+
+/* WhatsApp button */
+.whatsapp-btn {
+  background: #25d366;
+}
+
+.whatsapp-btn:hover {
+  background: #1ebe5d;
+}
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #4285f4; /* Google blue */
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: background 0.3s ease;
+  z-index: 1000;
+}
+
+.scroll-to-top:hover {
+  background: #3367d6; /* darker blue */
+}
+

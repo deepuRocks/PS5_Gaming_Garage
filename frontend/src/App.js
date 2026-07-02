@@ -17,6 +17,7 @@ import Profile from "./components/Profile";
 import ServiceDetail from "./components/ServiceDetail";
 import AboutUs from "./pages/AboutUs";
 import Reviews from "./pages/Reviews";
+import ContactUs from "./pages/ContactUs";
 
 // ✅ ProtectedRoute for normal users
 function ProtectedRoute({ children }) {
@@ -128,6 +129,14 @@ function App() {
           element={
             <Layout>
               <Reviews />
+            </Layout>
+          }
+        />
+                      <Route
+          path="/contact"
+          element={
+            <Layout>
+              <ContactUs />
             </Layout>
           }
         />

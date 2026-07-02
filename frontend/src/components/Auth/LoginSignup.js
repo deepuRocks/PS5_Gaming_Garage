@@ -57,15 +57,18 @@ const LoginSignup = () => {
 
       // ✅ Call backend signup API
       try {
-        const res = await axios.post("http://localhost:5000/api/auth/signup", {
-          firstName,
-          lastName,
-          email,
-          password,
-          phoneNumber,
-          countryCode,
-          gender,
-        });
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/auth/signup`,
+          {
+            firstName,
+            lastName,
+            email,
+            password,
+            phoneNumber,
+            countryCode,
+            gender,
+          },
+        );
         alert(res.data.message);
         setTab("login"); // ✅ redirect user to login form
       } catch (err) {
@@ -86,10 +89,13 @@ const LoginSignup = () => {
 
       // ✅ Call backend login API
       try {
-        const res = await axios.post("http://localhost:5000/api/auth/login", {
-          email,
-          password,
-        });
+        const res = await axios.post(
+          `${process.env.REACT_APP_API_URL}/api/auth/login`,
+          {
+            email,
+            password,
+          },
+        );
 
         // ✅ Save JWT token in localStorage
         if (res.data.token) {
@@ -119,10 +125,10 @@ const LoginSignup = () => {
       <img src={bgImage} alt="Background" className="bg-image" />
 
       <div className="auth-form">
-        <h2>
+        <div className="logo-heading">
           <img src={logo} alt="Logo" className="logo-icon" />
-          Hyderabad Gaming Garage
-        </h2>
+          <span className="logo-text">Hyderabad Gaming Garage</span>
+        </div>
 
         <div className="tabs">
           <button
@@ -138,13 +144,20 @@ const LoginSignup = () => {
             Sign Up
           </button>
         </div>
-        {/* ✅ Google Login Button */}
+
+
+        {tab === "login" ? (
+          <form onSubmit={handleSubmit}>
+            <input type="email" placeholder="Email" />
+            <input type="password" placeholder="Password" />
+            <button type="submit">Login</button>
+                              {/* ✅ Google Login Button */}
         <div className="google-login">
           <GoogleLogin
             onSuccess={async (credentialResponse) => {
               try {
                 const res = await axios.post(
-                  "http://localhost:5000/api/auth/google-login",
+                  `${process.env.REACT_APP_API_URL}/api/auth/google-login`,
                   {
                     token: credentialResponse.credential,
                   },
@@ -170,12 +183,6 @@ const LoginSignup = () => {
             }}
           />
         </div>
-
-        {tab === "login" ? (
-          <form onSubmit={handleSubmit}>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button type="submit">Login</button>
             <div className="forgot">
               <button
                 type="button"

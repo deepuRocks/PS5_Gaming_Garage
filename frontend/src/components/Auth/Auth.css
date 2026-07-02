@@ -32,16 +32,19 @@ body, html {
   z-index: -1;
 }
 
-
 /* Form card */
 .auth-form {
-  background-color: rgba(0, 0, 0, 0.82);
-  padding: 2rem;
-  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.82); /* dark semi-transparent background */
+  padding: 2rem; /* consistent spacing */
+  border-radius: 12px; /* smooth rounded corners */
   color: white;
-  width: 350px;
-  margin-right: 5%;
+  width: 100%;
+  max-width: 400px; /* responsive limit */
+  margin: 0 auto; /* center horizontally */
+  text-align: center;
   box-sizing: border-box;
+  margin-right: 5%;
+  /* border + shadow for glow effect */
   border: 1px solid rgba(0, 170, 255, 0.25);
   box-shadow: 0 0 32px rgba(0, 120, 255, 0.15);
 }
@@ -174,9 +177,24 @@ button[type="submit"]:hover {
   margin-right: 8px;
 }
 
+
+.logo-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px; /* space between logo and text */
+  margin-bottom: 20px;
+}
+
 .logo-icon {
-  width: 40px;
-  height: 40px;
-  margin-right: 8px;
-  vertical-align: middle;
+  width: 50px;
+  height: auto;
+}
+
+.logo-text {
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap; /* prevents wrapping */
 }
