@@ -7,7 +7,7 @@ import {
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import LoginSignup from "./components/Auth/LoginSignup";
 import ResetPassword from "./components/Auth/ResetPassword";
-import AdminPage from "./components/AdminPage";
+//import AdminPage from "./components/AdminPage";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import Dashboard from "./components/Dashboard";
@@ -18,6 +18,13 @@ import ServiceDetail from "./components/ServiceDetail";
 import AboutUs from "./pages/AboutUs";
 import Reviews from "./pages/Reviews";
 import ContactUs from "./pages/ContactUs";
+import AdminRoute from "./pages/admin/AdminRoute";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminServices from "./pages/admin/AdminServices";
+import AdminContent from "./pages/admin/AdminContent";
+import AdminFeedback from "./pages/admin/AdminFeedback";
 
 // ✅ ProtectedRoute for normal users
 function ProtectedRoute({ children }) {
@@ -28,18 +35,6 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-// ✅ AdminRoute for admin-only access
-function AdminRoute({ children }) {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role"); // set this at login
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
-  if (role !== "admin") {
-    return <Navigate to="/dashboard" replace />;
-  }
-  return children;
-}
 
 function App() {
   return (
@@ -53,13 +48,19 @@ function App() {
 
         {/* Admin route (admin-only) */}
         <Route
-          path="/admin"
+          path="/admin/*"
           element={
             <AdminRoute>
-              <AdminPage />
+              <AdminLayout />
             </AdminRoute>
           }
-        />
+        >
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="services" element={<AdminServices />} />
+          <Route path="content" element={<AdminContent />} />
+          <Route path="feedback" element={<AdminFeedback />} />
+        </Route>
 
         {/* User routes (protected) */}
         <Route
