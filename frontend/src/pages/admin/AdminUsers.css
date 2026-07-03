@@ -1,0 +1,18 @@
+.admin-users {
+  padding: 20px;
+}
+
+.admin-users table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-users th, .admin-users td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.admin-users th {
+  background: #f4f4f4;
+}
