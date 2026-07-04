@@ -15,7 +15,7 @@ export default function Footer() {
               alt="PS5 Gaming Garage Logo"
               className="footer-logo-img"
             />
-            <h2>PS5 Gaming Garage</h2>
+            <h2>Hyderabad Gaming Garage</h2>
           </div>
           <p>
             Expert PS5 console and controller repair services. We focus on

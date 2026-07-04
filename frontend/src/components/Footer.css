@@ -31,6 +31,10 @@
   width: auto;
 }
 
+.footer-logo h2 {
+font-size: 22px;
+}
+
 .footer-about p {
   margin: 15px 0;
   line-height: 1.6;
