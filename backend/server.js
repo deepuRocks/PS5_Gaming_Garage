@@ -8,6 +8,7 @@ const serviceRoutes = require("./routes/services"); // ✅ single import
 const orderRoutes = require("./routes/orders");
 const cartRoutes = require("./routes/cart");
 const feedbackRoutes = require("./routes/feedback");
+const adminRoutes = require("./routes/admin");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -27,6 +28,8 @@ app.use("/api/services", serviceRoutes); // ✅ matches import
 app.use("/api/orders", orderRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/feedback", feedbackRoutes);
+//admin routes starts from here
+app.use("/api/admin", adminRoutes); // ✅ mount admin routes
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

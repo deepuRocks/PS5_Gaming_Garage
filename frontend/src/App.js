@@ -48,7 +48,7 @@ function App() {
 
         {/* Admin route (admin-only) */}
         <Route
-          path="/admin/*"
+          path="/admin"
           element={
             <AdminRoute>
               <AdminLayout />
