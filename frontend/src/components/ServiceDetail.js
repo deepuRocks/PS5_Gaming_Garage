@@ -9,9 +9,8 @@ export default function ServiceDetail() {
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
   const [activeTab, setActiveTab] = useState("details");
-
-  const token = localStorage.getItem("token");
-  const isLoggedIn = !!token;
+  //const token = localStorage.getItem("token");
+  //const isLoggedIn = !!token;
 
   useEffect(() => {
     fetch(`http://localhost:5000/api/services/${id}`)
@@ -156,17 +155,11 @@ export default function ServiceDetail() {
       <div className="tabs">
         <button onClick={() => setActiveTab("details")}>Details</button>
         <button onClick={() => setActiveTab("shipping")}>Shipping</button>
-        <button onClick={() => setActiveTab("warranty")}>
-          Repair Warranty
-        </button>
       </div>
 
       <div className="tab-content">
         {activeTab === "details" && <p>{service.description}</p>}
         {activeTab === "shipping" && <p>🚚 Free delivery across India.</p>}
-        {activeTab === "warranty" && (
-          <p>🛠 3-month repair warranty included.</p>
-        )}
       </div>
     </div>
   );
