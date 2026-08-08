@@ -16,7 +16,7 @@ export default function AdminUsers() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    axios.get("http://localhost:5000/api/admin/users", {
+    axios.get(`${process.env.REACT_APP_API_URL}/api/admin/users`, {
       headers: { Authorization: `Bearer ${token}` }
     }).then(res => setUsers(res.data));
   }, []);
@@ -46,12 +46,12 @@ export default function AdminUsers() {
     const token = localStorage.getItem("token");
     try {
       if (editingUser) {
-        const res = await axios.put(`http://localhost:5000/api/admin/users/${editingUser}`, formData, {
+        const res = await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/users/${editingUser}`, formData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUsers(users.map(u => u.id === editingUser ? res.data : u));
       } else {
-        const res = await axios.post("http://localhost:5000/api/admin/users", formData, {
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/users`, formData, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUsers([...users, res.data]);
@@ -64,7 +64,7 @@ export default function AdminUsers() {
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
-    await axios.delete(`http://localhost:5000/api/admin/users/${id}`, {
+    await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/users/${id}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     setUsers(users.filter(u => u.id !== id));

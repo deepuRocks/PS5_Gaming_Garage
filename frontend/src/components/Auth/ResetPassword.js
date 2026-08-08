@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import "./Auth.css";
 import bgImage from "../../assets/background.jpg";
+import { toast } from "react-toastify";
 
 const ResetPassword = () => {
   const { token } = useParams();
@@ -17,32 +18,32 @@ const ResetPassword = () => {
     e.preventDefault();
 
     if (newPassword !== rePassword) {
-      alert("Passwords do not match");
+      toast.error("Passwords do not match ❌");
       return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/auth/reset-password/${token}`,
+        `${process.env.REACT_APP_API_URL}/api/auth/reset-password/${token}`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, newPassword }),
-        },
+        }
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message || "Reset failed. Please check your email.");
+        toast.error(data.message || "Reset failed. Please check your email ❌");
         return;
       }
 
-      alert(data.message);
-      navigate("/"); // redirect back to login/signup
+      toast.success(data.message || "Password updated successfully ✅");
+      setTimeout(() => navigate("/login"), 300);
     } catch (err) {
-      alert("Unable to connect to server. Please try again later.");
-      console.error(err);
+      console.error("Error:", err);
+      toast.error("Unable to connect to server ❌");
     }
   };
 
@@ -57,7 +58,7 @@ const ResetPassword = () => {
           left: 0,
           width: "100%",
           height: "100%",
-          objectFit: "fit", // ✅ works here
+          objectFit: "cover", // ✅ corrected for full background
           zIndex: -1,
         }}
       />

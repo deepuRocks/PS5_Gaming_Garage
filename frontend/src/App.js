@@ -2,12 +2,10 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
 } from "react-router-dom";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import LoginSignup from "./components/Auth/LoginSignup";
 import ResetPassword from "./components/Auth/ResetPassword";
-//import AdminPage from "./components/AdminPage";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
 import Dashboard from "./components/Dashboard";
@@ -26,15 +24,31 @@ import AdminServices from "./pages/admin/AdminServices";
 import AdminContent from "./pages/admin/AdminContent";
 import AdminFeedback from "./pages/admin/AdminFeedback";
 
+// ✅ Toastify imports
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 // ✅ ProtectedRoute for normal users
-function ProtectedRoute({ children }) {
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
+function ProtectedRoute({ children, message }) {
   const token = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      const timer = setTimeout(() => navigate("/login", { replace: true }), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [token, navigate, message]);
+
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return null; // render nothing while waiting for redirect
   }
+
   return children;
 }
-
 
 function App() {
   return (
@@ -125,7 +139,7 @@ function App() {
             </Layout>
           }
         />
-                <Route
+        <Route
           path="/reviews"
           element={
             <Layout>
@@ -133,7 +147,7 @@ function App() {
             </Layout>
           }
         />
-                      <Route
+        <Route
           path="/contact"
           element={
             <Layout>
@@ -142,6 +156,9 @@ function App() {
           }
         />
       </Routes>
+
+      {/* ✅ Toast container mounted once at root */}
+      <ToastContainer position="top-right" autoClose={3000} />
     </Router>
   );
 }

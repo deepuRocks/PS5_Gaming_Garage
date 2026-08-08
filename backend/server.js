@@ -1,4 +1,7 @@
-require("dotenv").config();
+// ✅ Conditional env loader
+const envFile = process.env.NODE_ENV === "production" ? ".env.production" : ".env.development";
+require("dotenv").config({ path: envFile });
+
 const express = require("express");
 const cors = require("cors");
 // Import routes
@@ -13,12 +16,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 app.use(express.json());
 
 // Root route
 app.get("/", (req, res) => {
-  res.send("PS5 Gaming Garage backend is running!");
+  res.send("Hyderabad Gaming Garage backend is running!");
 });
 
 // API routes
@@ -32,5 +35,5 @@ app.use("/api/feedback", feedbackRoutes);
 app.use("/api/admin", adminRoutes); // ✅ mount admin routes
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+console.log(`Server running at port ${PORT}, frontend: ${process.env.FRONTEND_URL}`);
 });

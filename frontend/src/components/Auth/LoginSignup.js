@@ -8,6 +8,7 @@ import "./Auth.css";
 import bgImage from "../../assets/background.jpg";
 import { GoogleLogin } from "@react-oauth/google";
 import logo from "../../assets/logo.png";
+import { toast } from "react-toastify";
 
 const LoginSignup = () => {
   const [tab, setTab] = useState("login");
@@ -27,31 +28,31 @@ const LoginSignup = () => {
 
       // ✅ Validations
       if (!email.includes("@")) {
-        alert("Email must contain '@'");
+        toast.error("Email must contain '@'");
         return;
       }
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&.]{8,}$/;
       if (!passwordRegex.test(password)) {
-        alert(
-          "Password must be at least 8 characters, alphanumeric, and may include special characters",
+        toast.error(
+          "Password must be at least 8 characters, alphanumeric, and may include special characters"
         );
         return;
       }
       if (password !== rePassword) {
-        alert("Passwords do not match");
+        toast.error("Passwords do not match ❌");
         return;
       }
       const phoneRegex = /^\d{10}$/;
       if (!countryCode.startsWith("+")) {
-        alert("Country code must start with '+' (e.g. +91, +1)");
+        toast.error("Country code must start with '+' (e.g. +91, +1)");
         return;
       }
       if (!phoneRegex.test(phoneNumber)) {
-        alert("Phone number must be exactly 10 digits");
+        toast.error("Phone number must be exactly 10 digits ❌");
         return;
       }
       if (!gender) {
-        alert("Please select a gender");
+        toast.error("Please select a gender ❌");
         return;
       }
 
@@ -67,23 +68,23 @@ const LoginSignup = () => {
             phoneNumber,
             countryCode,
             gender,
-          },
+          }
         );
-        alert(res.data.message);
+        toast.success(res.data.message || "Signup successful ✅");
         setTab("login"); // ✅ redirect user to login form
       } catch (err) {
-        alert(err.response?.data?.message || "Signup failed");
+        toast.error(err.response?.data?.message || "Signup failed ❌");
       }
     } else {
       const email = e.target[0].value;
       const password = e.target[1].value;
 
       if (!email.includes("@")) {
-        alert("Email must contain '@'");
+        toast.error("Email must contain '@'");
         return;
       }
       if (password.length < 8) {
-        alert("Password must be at least 8 characters");
+        toast.error("Password must be at least 8 characters ❌");
         return;
       }
 
@@ -94,7 +95,7 @@ const LoginSignup = () => {
           {
             email,
             password,
-          },
+          }
         );
 
         // ✅ Save JWT token in localStorage
@@ -106,16 +107,16 @@ const LoginSignup = () => {
 
         // ✅ Redirect based on role
         if (res.data.role === "admin") {
-          alert("Admin login successful");
-          window.location.href = "/admin";
+          toast.success("Admin login successful ✅");
+          setTimeout(() => (window.location.href = "/admin"), 300);
         } else if (res.data.role === "user") {
-          alert("User login successful");
-          window.location.href = "/dashboard";
+          toast.success("User login successful ✅");
+          setTimeout(() => (window.location.href = "/dashboard"), 300);
         } else {
-          alert(res.data.message);
+          toast.info(res.data.message);
         }
       } catch (err) {
-        alert(err.response?.data?.message || "Login failed");
+        toast.error(err.response?.data?.message || "Login failed ❌");
       }
     }
   };
@@ -145,44 +146,47 @@ const LoginSignup = () => {
           </button>
         </div>
 
-
         {tab === "login" ? (
           <form onSubmit={handleSubmit}>
             <input type="email" placeholder="Email" />
             <input type="password" placeholder="Password" />
             <button type="submit">Login</button>
-                              {/* ✅ Google Login Button */}
-        <div className="google-login">
-          <GoogleLogin
-            onSuccess={async (credentialResponse) => {
-              try {
-                const res = await axios.post(
-                  `${process.env.REACT_APP_API_URL}/api/auth/google-login`,
-                  {
-                    token: credentialResponse.credential,
-                  },
-                );
 
-                if (res.data.token) {
-                  localStorage.setItem("token", res.data.token);
-                  localStorage.setItem("first_name", res.data.first_name);
-                  localStorage.setItem("last_name", res.data.last_name);
-                }
+            {/* ✅ Google Login Button */}
+            <div className="google-login">
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  try {
+                    const res = await axios.post(
+                      `${process.env.REACT_APP_API_URL}/api/auth/google-login`,
+                      {
+                        token: credentialResponse.credential,
+                      }
+                    );
 
-                if (res.data.role === "admin") {
-                  window.location.href = "/admin";
-                } else {
-                  window.location.href = "/dashboard";
-                }
-              } catch (err) {
-                alert("Google login failed");
-              }
-            }}
-            onError={() => {
-              alert("Google login failed");
-            }}
-          />
-        </div>
+                    if (res.data.token) {
+                      localStorage.setItem("token", res.data.token);
+                      localStorage.setItem("first_name", res.data.first_name);
+                      localStorage.setItem("last_name", res.data.last_name);
+                    }
+
+                    if (res.data.role === "admin") {
+                      toast.success("Admin login successful ✅");
+                      setTimeout(() => (window.location.href = "/admin"), 300);
+                    } else {
+                      toast.success("User login successful ✅");
+                      setTimeout(() => (window.location.href = "/dashboard"), 300);
+                    }
+                  } catch (err) {
+                    toast.error("Google login failed ❌");
+                  }
+                }}
+                onError={() => {
+                  toast.error("Google login failed ❌");
+                }}
+              />
+            </div>
+
             <div className="forgot">
               <button
                 type="button"

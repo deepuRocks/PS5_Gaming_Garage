@@ -9,6 +9,7 @@ import {
   FaArrowUp,
 } from "react-icons/fa";
 import contactImage from "../assets/contact-hero.png";
+import { toast } from "react-toastify";
 
 export default function ContactUs() {
   const [showButton, setShowButton] = useState(false);
@@ -44,18 +45,26 @@ export default function ContactUs() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Send feedback to backend
-    const response = await fetch("http://localhost:5000/api/feedback", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/feedback`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
-    if (response.ok) {
-      alert("Feedback sent successfully!");
-      setFormData({ name: "", email: "", message: "" });
-    } else {
-      alert("Failed to send feedback. Please try again.");
+      if (response.ok) {
+        toast.success("Feedback sent successfully ✅");
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        const data = await response.json();
+        toast.error(data.message || "Failed to send feedback ❌");
+      }
+    } catch (err) {
+      console.error("Error sending feedback:", err);
+      toast.error("Unable to connect to server ❌");
     }
   };
 
