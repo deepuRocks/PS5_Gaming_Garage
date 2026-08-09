@@ -34,7 +34,7 @@ const LoginSignup = () => {
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&.]{8,}$/;
       if (!passwordRegex.test(password)) {
         toast.error(
-          "Password must be at least 8 characters, alphanumeric, and may include special characters"
+          "Password must be at least 8 characters, alphanumeric, and may include special characters",
         );
         return;
       }
@@ -68,7 +68,7 @@ const LoginSignup = () => {
             phoneNumber,
             countryCode,
             gender,
-          }
+          },
         );
         toast.success(res.data.message || "Signup successful ✅");
         setTab("login"); // ✅ redirect user to login form
@@ -95,7 +95,7 @@ const LoginSignup = () => {
           {
             email,
             password,
-          }
+          },
         );
 
         // ✅ Save JWT token in localStorage
@@ -155,13 +155,16 @@ const LoginSignup = () => {
             {/* ✅ Google Login Button */}
             <div className="google-login">
               <GoogleLogin
+                theme="outline"
+                size="large"
+                width="100%"
                 onSuccess={async (credentialResponse) => {
                   try {
                     const res = await axios.post(
                       `${process.env.REACT_APP_API_URL}/api/auth/google-login`,
                       {
                         token: credentialResponse.credential,
-                      }
+                      },
                     );
 
                     if (res.data.token) {
@@ -175,7 +178,10 @@ const LoginSignup = () => {
                       setTimeout(() => (window.location.href = "/admin"), 300);
                     } else {
                       toast.success("User login successful ✅");
-                      setTimeout(() => (window.location.href = "/dashboard"), 300);
+                      setTimeout(
+                        () => (window.location.href = "/dashboard"),
+                        300,
+                      );
                     }
                   } catch (err) {
                     toast.error("Google login failed ❌");

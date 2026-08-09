@@ -166,16 +166,26 @@ button[type="submit"]:hover {
 }
 
 
+
 .google-login {
   margin-top: 15px;
   text-align: center;
 }
+
 
 .google-icon {
   width: 20px;
   height: 20px;
   margin-right: 8px;
 }
+
+.google-login > div {
+  width: 100% !important;   /* fill the form card */
+  max-width: 100%;          /* respect .auth-form width */
+  box-sizing: border-box;   /* prevent overflow */
+}
+
+
 
 
 .logo-heading {
