@@ -2,16 +2,58 @@
    GAMING GARAGE — Auth Component (Connected to Backend)
    ============================================ */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Auth.css";
 import bgImage from "../../assets/background.jpg";
-import { GoogleLogin } from "@react-oauth/google";
 import logo from "../../assets/logo.png";
 import { toast } from "react-toastify";
 
 const LoginSignup = () => {
   const [tab, setTab] = useState("login");
+
+  useEffect(() => {
+    // ✅ Initialize Google Identity Services
+    window.google?.accounts.id.initialize({
+      client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+      callback: async (credentialResponse) => {
+        try {
+          const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/api/auth/google-login`,
+            { token: credentialResponse.credential }
+          );
+
+          if (res.data.token) {
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("first_name", res.data.first_name);
+            localStorage.setItem("last_name", res.data.last_name);
+          }
+
+          if (res.data.role === "admin") {
+            toast.success("Admin login successful ✅");
+            setTimeout(() => (window.location.href = "/admin"), 300);
+          } else {
+            toast.success("User login successful ✅");
+            setTimeout(() => (window.location.href = "/dashboard"), 300);
+          }
+        } catch (err) {
+          toast.error("Google login failed ❌");
+        }
+      },
+    });
+
+    // ✅ Render the Google button with full text
+    window.google?.accounts.id.renderButton(
+      document.getElementById("googleSignInDiv"),
+      {
+        theme: "outline",
+        size: "large",
+        shape: "rectangular",
+        text: "signin_with",   // always show full text
+        width: "100%"             // lock width
+      }
+    );
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,9 +75,7 @@ const LoginSignup = () => {
       }
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&.]{8,}$/;
       if (!passwordRegex.test(password)) {
-        toast.error(
-          "Password must be at least 8 characters, alphanumeric, and may include special characters",
-        );
+        toast.error("Password must be at least 8 characters, alphanumeric, and may include special characters");
         return;
       }
       if (password !== rePassword) {
@@ -60,18 +100,10 @@ const LoginSignup = () => {
       try {
         const res = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/auth/signup`,
-          {
-            firstName,
-            lastName,
-            email,
-            password,
-            phoneNumber,
-            countryCode,
-            gender,
-          },
+          { firstName, lastName, email, password, phoneNumber, countryCode, gender }
         );
         toast.success(res.data.message || "Signup successful ✅");
-        setTab("login"); // ✅ redirect user to login form
+        setTab("login");
       } catch (err) {
         toast.error(err.response?.data?.message || "Signup failed ❌");
       }
@@ -92,20 +124,15 @@ const LoginSignup = () => {
       try {
         const res = await axios.post(
           `${process.env.REACT_APP_API_URL}/api/auth/login`,
-          {
-            email,
-            password,
-          },
+          { email, password }
         );
 
-        // ✅ Save JWT token in localStorage
         if (res.data.token) {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("first_name", res.data.first_name);
           localStorage.setItem("last_name", res.data.last_name);
         }
 
-        // ✅ Redirect based on role
         if (res.data.role === "admin") {
           toast.success("Admin login successful ✅");
           setTimeout(() => (window.location.href = "/admin"), 300);
@@ -132,18 +159,8 @@ const LoginSignup = () => {
         </div>
 
         <div className="tabs">
-          <button
-            className={tab === "login" ? "active" : ""}
-            onClick={() => setTab("login")}
-          >
-            Login
-          </button>
-          <button
-            className={tab === "signup" ? "active" : ""}
-            onClick={() => setTab("signup")}
-          >
-            Sign Up
-          </button>
+          <button className={tab === "login" ? "active" : ""} onClick={() => setTab("login")}>Login</button>
+          <button className={tab === "signup" ? "active" : ""} onClick={() => setTab("signup")}>Sign Up</button>
         </div>
 
         {tab === "login" ? (
@@ -153,47 +170,7 @@ const LoginSignup = () => {
             <button type="submit">Login</button>
 
             {/* ✅ Google Login Button */}
-            <div className="google-login">
-              <GoogleLogin
-                theme="outline"
-                size="large"
-                shape="rectangular"
-                width="100%"
-                text="signin_with"
-                onSuccess={async (credentialResponse) => {
-                  try {
-                    const res = await axios.post(
-                      `${process.env.REACT_APP_API_URL}/api/auth/google-login`,
-                      {
-                        token: credentialResponse.credential,
-                      },
-                    );
-
-                    if (res.data.token) {
-                      localStorage.setItem("token", res.data.token);
-                      localStorage.setItem("first_name", res.data.first_name);
-                      localStorage.setItem("last_name", res.data.last_name);
-                    }
-
-                    if (res.data.role === "admin") {
-                      toast.success("Admin login successful ✅");
-                      setTimeout(() => (window.location.href = "/admin"), 300);
-                    } else {
-                      toast.success("User login successful ✅");
-                      setTimeout(
-                        () => (window.location.href = "/dashboard"),
-                        300,
-                      );
-                    }
-                  } catch (err) {
-                    toast.error("Google login failed ❌");
-                  }
-                }}
-                onError={() => {
-                  toast.error("Google login failed ❌");
-                }}
-              />
-            </div>
+            <div id="googleSignInDiv" className="google-login"></div>
 
             <div className="forgot">
               <button
