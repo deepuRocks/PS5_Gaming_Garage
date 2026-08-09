@@ -170,13 +170,8 @@ button[type="submit"]:hover {
 .google-login {
   margin-top: 15px;
   text-align: center;
-}
-
-
-.google-icon {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
+  display: flex;
+  justify-content: center;
 }
 
 .google-login > div {
@@ -186,6 +181,11 @@ button[type="submit"]:hover {
 }
 
 
+.google-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+}
 
 
 .logo-heading {
