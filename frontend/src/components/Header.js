@@ -4,13 +4,14 @@ import logoImage from "../assets/logo.png";
 import { FaSearch } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";   // ✅ cart icon
 import { FaSignOutAlt } from "react-icons/fa";     // ✅ logout icon
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Header({ onSearch }) {
   const [query, setQuery] = useState("");
   const [username, setUsername] = useState("");
   const [cartCount, setCartCount] = useState(0);   // ✅ cart count
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const first = localStorage.getItem("first_name") || "";
@@ -45,6 +46,12 @@ export default function Header({ onSearch }) {
     return () => window.removeEventListener("cartUpdated", updateCart);
   }, []);
 
+  // ✅ Clear search when route changes
+  useEffect(() => {
+    onSearch("");
+    setQuery("");
+  }, [location.pathname, onSearch]);
+
   const handleSearch = () => {
     onSearch(query);
   };
@@ -74,10 +81,16 @@ export default function Header({ onSearch }) {
             placeholder="Search for repairs and services ..."
             className="search-bar"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setQuery(value);
+              if (value === "") {
+                onSearch("");   // ✅ clear results when input is empty
+              }
+            }}
             onKeyDown={handleKeyDown}
           />
-          <button className="search-button">
+          <button className="search-button" onClick={handleSearch}>
             <FaSearch />
           </button>
         </div>
