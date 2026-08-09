@@ -1,3 +1,6 @@
+// ✅ Conditional env loader
+const envFile = process.env.NODE_ENV === "production" ? ".env.production" : ".env.development";
+require("dotenv").config({ path: envFile });
 const express = require("express");
 const nodemailer = require("nodemailer");
 

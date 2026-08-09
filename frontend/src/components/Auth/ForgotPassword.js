@@ -5,6 +5,8 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 import bgImage from "../../assets/background.jpg";
+import { toast } from "react-toastify";
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
@@ -14,25 +16,26 @@ const ForgotPassword = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/forgot-password",
+        `${process.env.REACT_APP_API_URL}/api/auth/forgot-password`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email }),
-        },
+        }
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message || "Reset request failed. Please check your email.");
+        toast.error(data.message || "Reset request failed ❌");
         return;
       }
 
-      alert(data.message);
+      toast.success(data.message || "Reset link sent ✅");
+      setTimeout(() => navigate("/login"), 300);
     } catch (err) {
-      alert("Unable to connect to server. Please try again later.");
-      console.error(err);
+      console.error("Error:", err);
+      toast.error("Unable to connect to server ❌");
     }
   };
 
@@ -47,7 +50,7 @@ const ForgotPassword = () => {
           left: 0,
           width: "100%",
           height: "100%",
-          objectFit: "fit", // ✅ works here
+          objectFit: "cover", // ✅ corrected for full background
           zIndex: -1,
         }}
       />

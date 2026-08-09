@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "./ServiceDetail.css";
+import { toast } from "react-toastify";
 
 export default function ServiceDetail() {
   const { id } = useParams();
@@ -9,24 +10,28 @@ export default function ServiceDetail() {
   const [options, setOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
   const [activeTab, setActiveTab] = useState("details");
-  //const token = localStorage.getItem("token");
-  //const isLoggedIn = !!token;
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/services/${id}`)
-      .then((res) => res.json())
+    fetch(`${process.env.REACT_APP_API_URL}/api/services/${id}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch service");
+        return res.json();
+      })
       .then((data) => {
         setService(data.service);
         setOptions(data.options || []);
         if (data.options && data.options.length > 0) {
           const defaultOpt =
             data.options.find((o) =>
-              o.option_name.toLowerCase().includes("both"),
+              o.option_name.toLowerCase().includes("both")
             )?.option_name || data.options[0].option_name;
           setSelectedOption(defaultOpt);
         }
       })
-      .catch((err) => console.error("Error fetching service:", err));
+      .catch((err) => {
+        console.error("Error fetching service:", err);
+        toast.error("Error fetching service ❌");
+      });
   }, [id]);
 
   if (!service) return <h2>Loading service...</h2>;
@@ -38,18 +43,18 @@ export default function ServiceDetail() {
   const handleAddToCart = () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Please login to add items to cart.");
+      toast.warning("Please login to add items to cart ⚠️");
+      setTimeout(() => navigate("/login"), 300);
       return;
     }
 
-    // ✅ Ensure service_id is always valid
     const serviceId = service.id || service.service_id;
     if (!serviceId) {
-      alert("Service ID missing, cannot add to cart.");
+      toast.error("Service ID missing, cannot add to cart ❌");
       return;
     }
 
-    fetch("http://localhost:5000/api/cart", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/cart`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +62,7 @@ export default function ServiceDetail() {
       },
       body: JSON.stringify({
         service_id: serviceId,
-        option_name: selectedOption.trim(), // ✅ ensure exact match
+        option_name: selectedOption.trim(),
         quantity: 1,
       }),
     })
@@ -66,27 +71,30 @@ export default function ServiceDetail() {
         return res.json();
       })
       .then((data) => {
-        alert("Added to cart!");
+        toast.success("Added to cart ✅");
         console.log("Cart item saved:", data);
       })
-      .catch((err) => console.error("Error adding to cart:", err));
+      .catch((err) => {
+        console.error("Error adding to cart:", err);
+        toast.error("Error adding to cart ❌");
+      });
   };
 
   const handleOrderNow = () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Please login to proceed with payment.");
+      toast.warning("Please login to proceed with payment ⚠️");
+      setTimeout(() => navigate("/login"), 300);
       return;
     }
 
-    // ✅ Ensure service_id is always valid
     const serviceId = service.id || service.service_id;
     if (!serviceId) {
-      alert("Service ID missing, cannot place order.");
+      toast.error("Service ID missing, cannot place order ❌");
       return;
     }
 
-    fetch("http://localhost:5000/api/cart", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/cart`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -104,10 +112,13 @@ export default function ServiceDetail() {
       })
       .then((data) => {
         console.log("Order item saved:", data);
-        // ✅ Navigate to cart after adding
-        navigate("/cart");
+        toast.success("Order placed successfully ✅");
+        setTimeout(() => navigate("/cart"), 300);
       })
-      .catch((err) => console.error("Error placing order:", err));
+      .catch((err) => {
+        console.error("Error placing order:", err);
+        toast.error("Error placing order ❌");
+      });
   };
 
   return (

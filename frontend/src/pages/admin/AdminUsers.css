@@ -2,17 +2,161 @@
   padding: 20px;
 }
 
+.admin-users h2 {
+  margin-bottom: 20px;
+}
+
 .admin-users table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 50px;
 }
 
-.admin-users th, .admin-users td {
-  border: 1px solid #ccc;
-  padding: 8px;
+/* Table header */
+.admin-users th {
+  background: #0a1628;   /* dark navy */
+  color: #fff;
+  padding: 10px;
   text-align: left;
 }
 
-.admin-users th {
-  background: #f4f4f4;
+/* Table cells */
+.admin-users td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  background: #f9f9f9;   /* light background for readability */
+  color: #333;
+}
+
+/* Zebra striping for rows */
+.admin-users tr:nth-child(even) td {
+  background: #f1f1f1;
+}
+
+/* Action buttons spacing */
+.admin-users .btn {
+  margin-right: 6px;
+}
+
+
+/* Primary action button (Edit) */
+.admin-btn-edit {
+  display: inline-block;
+  margin: 6px 6px 0 0;
+  padding: 8px 14px;
+  background: #0d6efd;          /* ✅ Bootstrap primary blue */
+  color: #fff;
+  border: none;
+  border-radius: 4px;           /* ✅ classic radius */
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-btn-edit:hover {
+  background: #0b5ed7;          /* ✅ darker hover */
+  transform: translateY(-1px);
+}
+
+.admin-btn-edit:active {
+  background: #0d6efd;
+  transform: translateY(0);
+}
+
+/* Danger action button (Delete) */
+.admin-btn-delete {
+  display: inline-block;
+  margin: 6px 6px 0 0;
+  padding: 8px 14px;
+  background: #dc3545;          /* ✅ Bootstrap danger red */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.admin-btn-delete:hover {
+  background: #bb2d3b;
+  transform: translateY(-1px);
+}
+
+.admin-btn-delete:active {
+  background: #dc3545;
+  transform: translateY(0);
+}
+
+
+.form-box {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.form-box input,
+.form-box select {
+  display: block;
+  width: 100%;
+  margin-bottom: 50px;
+  padding: 8px;
+}
+
+
+.save {
+  display: inline-block;
+  margin: 6px 6px 0 0;
+  padding: 8px 14px;
+  background: #0d6efd;          /* ✅ Bootstrap primary blue */
+  color: #fff;
+  border: none;
+  border-radius: 4px;           /* ✅ classic radius */
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.save:hover {
+  background: #0b5ed7;          /* ✅ darker hover */
+  transform: translateY(-1px);
+}
+
+.save:active {
+  background: #0d6efd;
+  transform: translateY(0);
+}
+
+
+.action-btn-secondary {
+  display: inline-block;
+  margin: 6px 6px 0 0;
+  padding: 8px 14px;
+  background: #dc3545;          /* ✅ Bootstrap danger red */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.action-btn-secondary :hover {
+  background: #bb2d3b;
+  transform: translateY(-1px);
+}
+
+.action-btn-secondary :active {
+  background: #dc3545;
+  transform: translateY(0);
 }

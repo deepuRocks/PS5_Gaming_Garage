@@ -1,4 +1,6 @@
-require("dotenv").config();
+// ✅ Conditional env loader
+const envFile = process.env.NODE_ENV === "production" ? ".env.production" : ".env.development";
+require("dotenv").config({ path: envFile });
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
@@ -121,7 +123,9 @@ router.post("/forgot-password", async (req, res) => {
       },
     });
 
-    const resetLink = `http://localhost:3000/reset-password/${token}`;
+    // ✅ Use env FRONTEND_URL instead of hardcoded localhost
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+
 
     await transporter.sendMail({
       to: email,

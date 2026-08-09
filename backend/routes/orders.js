@@ -1,3 +1,8 @@
+
+// ✅ Conditional env loader
+const envFile = process.env.NODE_ENV === "production" ? ".env.production" : ".env.development";
+require("dotenv").config({ path: envFile });
+
 const { sendMail } = require("../utils/mailer");
 const express = require("express");
 const router = express.Router();
@@ -9,23 +14,25 @@ router.post("/", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader)
-      return res.status(401).json({ message: "No token provided" });
+      return res.status(401).json({ success: false, message: "No token provided ❌" });
 
     const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch {
+      return res.status(401).json({ success: false, message: "Please login ❌" });
+    }
     const userId = decoded.id;
 
-    // ✅ Accept new fields
-    const { name, phone, address1, address2, landmark, pincode, state } =
-      req.body;
+    const { name, phone, address1, address2, landmark, pincode, state } = req.body;
     if (!name || !phone || !address1 || !landmark || !pincode || !state) {
       return res.status(400).json({
-        error:
-          "Name, phone, address1, landmark, pincode, and state are required",
+        success: false,
+        message: "Name, phone, address1, landmark, pincode, and state are required ❌",
       });
     }
 
-    // ✅ Fetch cart items with option-level pricing
     const cartResult = await pool.query(
       `SELECT c.service_id, c.option_name, c.quantity, so.price
        FROM cart c
@@ -36,16 +43,11 @@ router.post("/", async (req, res) => {
     );
 
     if (cartResult.rows.length === 0) {
-      return res.status(400).json({ error: "Cart is empty" });
+      return res.status(400).json({ success: false, message: "Cart is empty ❌" });
     }
 
-    // ✅ Calculate total
-    const total = cartResult.rows.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0,
-    );
+    const total = cartResult.rows.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    // ✅ Insert order summary (structured fields)
     const orderResult = await pool.query(
       `INSERT INTO orders (
          user_id, shipping_name, shipping_phone,
@@ -55,21 +57,10 @@ router.post("/", async (req, res) => {
        )
        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,'Pending',NOW())
        RETURNING id`,
-      [
-        userId,
-        name,
-        phone,
-        address1,
-        address2,
-        landmark,
-        pincode,
-        state,
-        total,
-      ],
+      [userId, name, phone, address1, address2, landmark, pincode, state, total],
     );
     const orderId = orderResult.rows[0].id;
 
-    // ✅ Insert order items
     for (const item of cartResult.rows) {
       await pool.query(
         `INSERT INTO order_items (order_id, service_id, option_name, quantity, price, status, created_at)
@@ -78,16 +69,12 @@ router.post("/", async (req, res) => {
       );
     }
 
-    // ✅ Clear cart
     await pool.query("DELETE FROM cart WHERE user_id = $1", [userId]);
 
-    // ✅ Respond immediately (no waiting for Gmail)
-    res.json({ message: "Order placed successfully", orderId });
+    res.json({ success: true, message: "Order placed successfully ✅", orderId });
 
-    // 🔄 Send emails in background
     setImmediate(async () => {
       try {
-        // Admin notification
         await sendMail(
           process.env.GMAIL_USER,
           `New Order #${orderId}`,
@@ -100,11 +87,7 @@ Status: Pending
 Date: ${new Date().toLocaleString()}`
         );
 
-        // User notification
-        const userEmailResult = await pool.query(
-          "SELECT email FROM users WHERE id=$1",
-          [userId],
-        );
+        const userEmailResult = await pool.query("SELECT email FROM users WHERE id=$1", [userId]);
         const userEmail = userEmailResult.rows[0]?.email;
         if (userEmail) {
           await sendMail(
@@ -123,19 +106,24 @@ We’ll notify you when the status changes.`
     });
   } catch (err) {
     console.error("Error creating order:", err.message);
-    res.status(500).json({ error: "Failed to create order" });
+    res.status(500).json({ success: false, message: "Failed to create order ❌" });
   }
 });
 
-// ✅ Get orders summary (one row per order item)
+// ✅ Get orders summary
 router.get("/", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader)
-      return res.status(401).json({ message: "No token provided" });
+      return res.status(401).json({ success: false, message: "No token provided ❌" });
 
     const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch {
+      return res.status(401).json({ success: false, message: "Please login ❌" });
+    }
     const userId = decoded.id;
 
     const result = await pool.query(
@@ -176,27 +164,31 @@ router.get("/", async (req, res) => {
       [userId],
     );
 
-    res.json(result.rows);
+    res.json({ success: true, message: "Orders fetched successfully ✅", data: result.rows });
   } catch (err) {
     console.error("Error fetching orders:", err.message);
-    res.status(500).json({ error: "Failed to fetch orders" });
+    res.status(500).json({ success: false, message: "Failed to fetch orders ❌" });
   }
 });
+
 // ✅ Cancel a single order item
 router.put("/items/:itemId/cancel", async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader)
-      return res.status(401).json({ message: "No token provided" });
+      return res.status(401).json({ success: false, message: "No token provided ❌" });
 
     const token = authHeader.split(" ")[1];
-    jwt.verify(token, process.env.JWT_SECRET); // decoded not needed here
+    try {
+      jwt.verify(token, process.env.JWT_SECRET);
+    } catch {
+      return res.status(401).json({ success: false, message: "Please login ❌" });
+    }
 
     const { itemId } = req.params;
     const { reason } = req.body;
     const statusText = `Cancelled: ${reason}`.substring(0, 100);
 
-    // Cancel the item
     const itemResult = await pool.query(
       `UPDATE order_items
        SET status=$1, cancel_reason=$2, updated_at=NOW()
@@ -206,12 +198,11 @@ router.put("/items/:itemId/cancel", async (req, res) => {
     );
 
     if (itemResult.rows.length === 0) {
-      return res.status(404).json({ message: "Order item not found" });
+      return res.status(404).json({ success: false, message: "Order item not found ❌" });
     }
 
     const orderId = itemResult.rows[0].order_id;
 
-    // Recalculate order total
     await pool.query(
       `UPDATE orders
        SET total = (
@@ -223,13 +214,10 @@ router.put("/items/:itemId/cancel", async (req, res) => {
       [orderId],
     );
 
-    // ✅ Respond immediately
-    res.json({ message: "Order item cancelled successfully" });
+    res.json({ success: true, message: "Order item cancelled successfully ✅" });
 
-    // 🔄 Send emails in background
     setImmediate(async () => {
       try {
-        // User email
         const userEmailResult = await pool.query(
           "SELECT email FROM users WHERE id=(SELECT user_id FROM orders WHERE id=$1)",
           [orderId],
@@ -247,7 +235,6 @@ New Status: ${statusText}`
           );
         }
 
-        // ✅ Admin email notification
         await sendMail(
           process.env.GMAIL_USER,
           `Order #${orderId} Cancelled`,
@@ -263,9 +250,8 @@ Date: ${new Date().toLocaleString()}`
     });
   } catch (err) {
     console.error("Error cancelling order item:", err.message);
-    res.status(500).json({ error: "Failed to cancel order item" });
+    res.status(500).json({ success: false, message: "Failed to cancel order item ❌" });
   }
 });
-
 
 module.exports = router;

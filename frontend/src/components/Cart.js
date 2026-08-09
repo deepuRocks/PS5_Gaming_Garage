@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // ✅ import axios
 import "./Cart.css";
+import { toast } from "react-toastify";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -12,17 +13,24 @@ export default function Cart() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Please login to view cart.");
+      toast.warning("Please login to view cart ⚠️");
       return;
     }
 
-    fetch("http://localhost:5000/api/cart", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/cart`, {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 401) {
+          toast.error("Session expired, please login again ❌");
+          setTimeout(() => navigate("/login"), 1000);
+          return [];
+        }
+        return res.json();
+      })
       .then((data) => setCart(data))
-      .catch((err) => console.error("Error fetching cart:", err));
-  }, []);
+      .catch(() => toast.error("Failed to fetch cart ❌"));
+  }, [navigate]);
 
   const updateQuantity = (index, delta) => {
     const newCart = [...cart];
@@ -33,18 +41,18 @@ export default function Cart() {
     if (newCart[index].quantity <= 0) {
       // ✅ Remove from DB when quantity hits 0
       const itemId = newCart[index].id;
-      fetch(`http://localhost:5000/api/cart/${itemId}`, {
+      fetch(`${process.env.REACT_APP_API_URL}/api/cart/${itemId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       })
-        .then(() => console.log("Cart item deleted from DB"))
-        .catch((err) => console.error("Error deleting cart item:", err));
+        .then(() => toast.success("Item removed from cart ✅"))
+        .catch(() => toast.error("Error deleting cart item ❌"));
 
       newCart.splice(index, 1);
     } else {
       // ✅ Update quantity in DB
       const itemId = newCart[index].id;
-      fetch(`http://localhost:5000/api/cart/${itemId}`, {
+      fetch(`${process.env.REACT_APP_API_URL}/api/cart/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -52,8 +60,8 @@ export default function Cart() {
         },
         body: JSON.stringify({ quantity: newCart[index].quantity }),
       })
-        .then(() => console.log("Cart item updated in DB"))
-        .catch((err) => console.error("Error updating cart item:", err));
+        .then(() => toast.success("Quantity updated ✅"))
+        .catch(() => toast.error("Error updating cart item ❌"));
     }
 
     setCart(newCart);
@@ -65,24 +73,24 @@ export default function Cart() {
   // ✅ Instead of placing order directly, navigate to Checkout
   const proceedToCheckout = () => {
     if (cart.length === 0) {
-      alert("Your cart is empty.");
+      toast.info("Your cart is empty 🛒");
       return;
     }
     navigate("/checkout"); // go to Checkout.js form
   };
 
-    // ✅ empty cart function
+  // ✅ empty cart function
   const emptyCart = () => {
     const token = localStorage.getItem("token");
     axios
-      .delete("http://localhost:5000/api/cart/clear", {
+      .delete(`${process.env.REACT_APP_API_URL}/api/cart/clear`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
-        alert("Cart emptied successfully.");
+        toast.success("Cart emptied successfully ✅");
         setCart([]); // ✅ clear cart state
       })
-      .catch((err) => console.error("Error emptying cart:", err));
+      .catch(() => toast.error("Error emptying cart ❌"));
   };
 
   return (

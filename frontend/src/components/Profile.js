@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
+import { toast } from "react-toastify";
 
 export default function Profile() {
   const [user, setUser] = useState({
@@ -14,17 +15,23 @@ export default function Profile() {
 
   // Fetch profile
   useEffect(() => {
-    fetch("http://localhost:5000/api/auth/profile", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch profile");
+        return res.json();
+      })
       .then((data) => setUser(data))
-      .catch((err) => console.error("Error fetching profile:", err));
+      .catch((err) => {
+        console.error("Error fetching profile:", err);
+        toast.error("Error fetching profile ❌");
+      });
   }, []);
 
   // Save profile
   const handleSave = () => {
-    fetch("http://localhost:5000/api/auth/profile", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/auth/profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -32,12 +39,18 @@ export default function Profile() {
       },
       body: JSON.stringify(user),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to update profile");
+        return res.json();
+      })
       .then(() => {
-        alert("Profile updated successfully!");
+        toast.success("Profile updated successfully ✅");
         setIsEditing(false);
       })
-      .catch((err) => console.error("Error updating profile:", err));
+      .catch((err) => {
+        console.error("Error updating profile:", err);
+        toast.error("Error updating profile ❌");
+      });
   };
 
   const handleChange = (e) => {

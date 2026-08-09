@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Checkout.css";
+import { toast } from "react-toastify";
 
 export default function Checkout() {
   const navigate = useNavigate();
@@ -35,7 +36,8 @@ export default function Checkout() {
     e.preventDefault();
 
     if (!token) {
-      alert("Please login to place an order.");
+      toast.warning("Please login to place an order ⚠️");
+      setTimeout(() => navigate("/login"), 300);
       return;
     }
 
@@ -48,24 +50,24 @@ export default function Checkout() {
       !formData.pincode ||
       !formData.state
     ) {
-      alert("Please fill all mandatory fields.");
+      toast.error("Please fill all mandatory fields ❌");
       return;
     }
 
     // Phone validation
     if (!/^\d{10}$/.test(formData.phone)) {
-      alert("Phone number must be exactly 10 digits.");
+      toast.error("Phone number must be exactly 10 digits ❌");
       return;
     }
 
     // Pincode validation
     if (!/^\d{6}$/.test(formData.pincode)) {
-      alert("Pincode must be exactly 6 digits.");
+      toast.error("Pincode must be exactly 6 digits ❌");
       return;
     }
 
     // Send structured fields to backend
-    fetch("http://localhost:5000/api/orders", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,17 +88,17 @@ export default function Checkout() {
         return res.json();
       })
       .then(() => {
-        alert("Order placed successfully!");
-        navigate("/orders");
+        toast.success("Order placed successfully ✅");
+        setTimeout(() => navigate("/orders"), 300);
       })
-      .catch((err) => console.error("Error placing order:", err));
+      .catch(() => toast.error("Error placing order ❌"));
   };
 
   return (
     <div className="checkout-container">
       <h1>Checkout</h1>
       <form onSubmit={handleSubmit} className="checkout-form">
-
+        {/* Form fields unchanged */}
         <div className="form-group">
           <label htmlFor="name">
             Name<span className="required">*</span>

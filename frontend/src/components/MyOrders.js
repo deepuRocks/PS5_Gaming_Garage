@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./MyOrders.css";
+import { toast } from "react-toastify";
 
 export default function MyOrders() {
   const [orders, setOrders] = useState([]);
@@ -19,16 +20,21 @@ export default function MyOrders() {
 
   const fetchOrders = () => {
     const token = localStorage.getItem("token");
+
     axios
-      .get("http://localhost:5000/api/orders", {
+      .get(`${process.env.REACT_APP_API_URL}/api/orders`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        setOrders(res.data);
+        // backend returns { success, message, data }
+        setOrders(res.data.data || []);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching orders:", err);
+        // avoid duplicate toast if interceptor already handles 401
+        if (err.response?.status !== 401) {
+          toast.error("Error fetching orders ❌");
+        }
         setLoading(false);
       });
   };
@@ -39,23 +45,29 @@ export default function MyOrders() {
 
   const handleCancelItem = (itemId) => {
     if (!cancelReason) {
-      alert("Please select a reason before cancelling.");
+      toast.error("Please select a reason before cancelling ❌");
       return;
     }
+
     const token = localStorage.getItem("token");
+
     axios
       .put(
-        `http://localhost:5000/api/orders/items/${itemId}/cancel`,
+        `${process.env.REACT_APP_API_URL}/api/orders/items/${itemId}/cancel`,
         { reason: cancelReason },
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then(() => {
-        alert("Item cancelled successfully.");
+        toast.success("Item cancelled successfully ✅");
         fetchOrders(); // refresh list
         setCancelItemId(null);
         setCancelReason("");
       })
-      .catch((err) => console.error("Error cancelling item:", err));
+      .catch((err) => {
+        if (err.response?.status !== 401) {
+          toast.error("Error cancelling item ❌");
+        }
+      });
   };
 
   if (loading) return <h2>Loading your orders...</h2>;

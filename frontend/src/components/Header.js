@@ -25,7 +25,7 @@ export default function Header({ onSearch }) {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    fetch("http://localhost:5000/api/cart", {
+    fetch(`${process.env.REACT_APP_API_URL}/api/cart`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -34,7 +34,7 @@ export default function Header({ onSearch }) {
 
     // ✅ Listen for cart updates
     const updateCart = () => {
-      fetch("http://localhost:5000/api/cart", {
+      fetch(`${process.env.REACT_APP_API_URL}/api/cart`, {
         headers: { Authorization: `Bearer ${token}` },
       })
         .then((res) => res.json())
