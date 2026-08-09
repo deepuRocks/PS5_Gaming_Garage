@@ -50,7 +50,7 @@ const ForgotPassword = () => {
           left: 0,
           width: "100%",
           height: "100%",
-          objectFit: "cover", // ✅ corrected for full background
+          objectFit: "fit", // ✅ corrected for full background
           zIndex: -1,
         }}
       />
