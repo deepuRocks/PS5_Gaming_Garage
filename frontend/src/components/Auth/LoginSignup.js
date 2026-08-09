@@ -157,7 +157,9 @@ const LoginSignup = () => {
               <GoogleLogin
                 theme="outline"
                 size="large"
+                shape="rectangular"
                 width="100%"
+                text="signin_with"
                 onSuccess={async (credentialResponse) => {
                   try {
                     const res = await axios.post(
